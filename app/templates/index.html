@@ -17,10 +17,14 @@
           title: {
               text: 'closures'
           },
-          series: [{
-              name: 'Total',
-              data: {{ total }}
-          }]
+          series: [
+          {% for tot in total %}
+          {
+              name: "{{ tot }}",
+              data: {{ total[tot] }}
+          },
+          {% endfor %}
+          ]
 
       });
   });

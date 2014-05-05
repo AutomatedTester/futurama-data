@@ -8,9 +8,27 @@ import datetime
 @app.route('/index')
 def index():
     closure_months, closure_dates = main("mozilla-inbound")
-    c_data = [(datetime.datetime.strptime(k, "%Y-%m"), closure_months[k]['total']) for k in sorted(closure_months.keys())]
-    tot = [value.total_seconds() / 3600 for (date, value) in c_data]
-    return render_template("index.html", total=tot)
+    x = []
+    y = {'no reason': [],
+         'checkin-test': [],
+         'checkin-compilation': [],
+         'infra': [],
+         'other': [],
+         'planned': [],
+         'total': [],
+         'backlog': [],
+         'checkin-test': []}
+
+    c_data = [(datetime.datetime.strptime(k, "%Y-%m"), closure_months[k]) for k in sorted(closure_months.keys())]
+    for data in c_data:
+        # We need to make a sparse array so we can have the 2 arrays the same length when plotting
+        not_filled = [k for k in y.keys() if k not in data[1].keys()]
+        for nf in not_filled:
+            y[nf].append(0)
+        #show me the data
+        for _x in data[1].keys():
+            y[_x].append(data[1][_x].total_seconds() / 3600)
+    return render_template("index.html", total=y)
 
 
 
