@@ -8,9 +8,8 @@ import datetime
 @app.route('/index')
 def index():
     closure_months, closure_dates = main("mozilla-inbound")
-    c_data = [(datetime.datetime.strptime(k, "%Y-%m"), closure_months[k]) for k in sorted(closure_months.keys())]
-    import pdb; pdb.set_trace()
-    tot = c_data[1][1]['total'].total_seconds()
+    c_data = [(datetime.datetime.strptime(k, "%Y-%m"), closure_months[k]['total']) for k in sorted(closure_months.keys())]
+    tot = [value.total_seconds() / 3600 for (date, value) in c_data]
     return render_template("index.html", total=tot)
 
 
