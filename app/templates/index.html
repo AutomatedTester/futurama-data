@@ -18,7 +18,7 @@
   $(function () {
       $('#container').highcharts({
           chart: {
-              type: 'line'
+              type: 'area'
           },
           title: {
               text: 'closures'
@@ -40,7 +40,12 @@
               data: {{ total["y"][tot] }}
           },
           {% endfor %}
-          ]
+          ],
+          plotOptions: {
+            area: {
+                stacking: 'normal',
+            },
+          }
 
       });
   });
