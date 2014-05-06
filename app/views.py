@@ -21,6 +21,8 @@ def index():
          'checkin-test': []}
 
     c_data = [(datetime.datetime.strptime(k, "%Y-%m"), closure_months[k]) for k in sorted(closure_months.keys())]
+    x = ["%s-%s" % (date.year, date.month if date.month > 9 else "0%s" % date.month) for (date, value) in c_data]
+    print x
     for data in c_data:
         # We need to make a sparse array so we can have the 2 arrays the same length when plotting
         not_filled = [k for k in y.keys() if k not in data[1].keys()]
@@ -30,7 +32,7 @@ def index():
         for _x in data[1].keys():
             y[_x].append(data[1][_x].total_seconds() / 3600)
 
-    return render_template("index.html", total=y, backouts=backouts())
+    return render_template("index.html", total={"x": x, "y": y}, backouts=backouts())
 
 
 
