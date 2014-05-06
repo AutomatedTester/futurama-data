@@ -2,6 +2,7 @@
     margin: auto;
     width: 1024px;
 }
+
 .backouts {
     margin: auto;
     width:400px;
@@ -11,4 +12,18 @@
     width:100px;
     margin: auto;
     font-size: 150px;
+}
+
+.floaty {
+    float: left;
+}
+.yetAnotherContainer {
+    margin:auto;
+}
+
+#container {
+    width:1000px;
+    height: 400px;
+    margin: 0 auto;
+    float: left;
 }
