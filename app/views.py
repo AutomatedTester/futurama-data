@@ -2,6 +2,7 @@ from flask import render_template
 from app import app
 import requests
 import datetime
+from datetime import timedelta
 #import treestatus_stats
 
 @app.route('/')
@@ -28,7 +29,8 @@ def index():
         #show me the data
         for _x in data[1].keys():
             y[_x].append(data[1][_x].total_seconds() / 3600)
-    return render_template("index.html", total=y)
+
+    return render_template("index.html", total=y, backouts=backouts())
 
 
 
@@ -82,6 +84,17 @@ def main(tree):
             Added = item['when']
             print "Added on :%s" % item['when']
 
-    print "Tree has been closed for a total of %s since it was created on %s" % (total, Added)
-    #_print_dict(month)
     return month, dates
+
+def backouts():
+    yesday = datetime.datetime.now() - timedelta(1)
+    yesterday = "%s-%s-%s" % (yesday.year, yesday.month if yesday.month > 9 else "0%s" % yesday.month, yesday.day if yesday.day > 9 else "0%s" % yesday.day)
+    total_pushes = requests.get("https://hg.mozilla.org/integration/mozilla-inbound/json-pushes?full=1&startdate=%s" % yesterday).json()
+    backed = 0
+    for resp in total_pushes:
+        for chnge in range(len(total_pushes[resp]['changesets'])):
+            if "backed" in total_pushes[resp]['changesets'][chnge]['desc'].lower():
+                backed += 1
+
+
+    return {"total": len(total_pushes), "backouts": backed, "startdate": yesterday}
