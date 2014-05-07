@@ -1,8 +1,11 @@
+import datetime
+from datetime import timedelta
+import re
+
 from flask import render_template
 from app import app
 import requests
-import datetime
-from datetime import timedelta
+
 #import treestatus_stats
 
 @app.route('/')
@@ -94,9 +97,14 @@ def main(tree):
 def backouts(search_date):
     total_pushes = requests.get("https://hg.mozilla.org/integration/mozilla-inbound/json-pushes?full=1&startdate=%s" % search_date).json()
     backed = 0
+    backoutln = re.compile('^.*[b,B]ackout.*')
+    backoutln2 = re.compile('^.*[b,B]acked out.*')
+    backoutln3 = re.compile('^.*[b,B]ack out.*')
     for resp in total_pushes:
         for chnge in range(len(total_pushes[resp]['changesets'])):
-            if "backed" in total_pushes[resp]['changesets'][chnge]['desc'].lower():
+            if (backoutln.match(total_pushes[resp]['changesets'][chnge]['desc']) or
+                backoutln2.match(total_pushes[resp]['changesets'][chnge]['desc']) or
+                backoutln3.match(total_pushes[resp]['changesets'][chnge]['desc'])):
                 backed += 1
 
 
