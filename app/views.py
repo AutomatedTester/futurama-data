@@ -6,8 +6,6 @@ from flask import render_template, request
 from app import app
 import requests
 
-#import treestatus_stats
-
 @app.route('/')
 @app.route('/index')
 def index():
@@ -36,10 +34,14 @@ def index():
             y[_x].append(data[1][_x].total_seconds() / 3600)
 
     yesday = datetime.datetime.now() - timedelta(1)
-    yesterday = "%s-%s-%s" % (yesday.year, yesday.month if yesday.month > 9 else "0%s" % yesday.month, yesday.day if yesday.day > 9 else "0%s" % yesday.day)
+    yesterday = "%s-%s-%s" % (yesday.year,
+        yesday.month if yesday.month > 9 else "0%s" % yesday.month,
+        yesday.day if yesday.day > 9 else "0%s" % yesday.day)
     backouts_since_yesterday = backouts(tree, yesterday)
     tody = datetime.datetime.now()
-    today = "%s-%s-%s" % (tody.year, tody.month if tody.month > 9 else "0%s" % tody.month, tody.day if tody.day > 9 else "0%s" % tody.day)
+    today = "%s-%s-%s" % (tody.year,
+        tody.month if tody.month > 9 else "0%s" % tody.month,
+        tody.day if tody.day > 9 else "0%s" % tody.day)
     backouts_today = backouts(tree, today)
 
     return render_template("index.html", total={"x": x, "y": y},
@@ -98,7 +100,8 @@ def main(tree):
     return month, dates
 
 def backouts(tree, search_date):
-    total_pushes = requests.get("https://hg.mozilla.org/%s/json-pushes?full=1&startdate=%s" % ("integration/%s" % tree if tree != "mozilla-central" else tree, search_date)).json()
+    total_pushes = requests.get("https://hg.mozilla.org/%s/json-pushes?full=1&startdate=%s" %
+        ("integration/%s" % tree if tree != "mozilla-central" else tree, search_date)).json()
     backed = 0
     backoutln = re.compile('^.*[b,B]ackout.*')
     backoutln2 = re.compile('^.*[b,B]acked out.*')
