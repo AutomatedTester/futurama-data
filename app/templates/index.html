@@ -7,8 +7,8 @@
   <div class='main'>
     <div class='main'>Below are the details for <span class='boldy'>Mozilla-Inbound</span></div>
     <div class='yetAnotherContainer'>
-        <div class='backouts floaty'><div class='omg'>{{ backouts['backouts'] }}</div><br> backouts were performed for only {{ backouts['total'] }}     pushes since the beginning of {{ backouts['startdate'] }}</div>
-        <div class='backouts floaty'><div class='omg'>{{ today['backouts'] }}</div><br> backouts were performed for only {{ today['total'] }}     pushes since the beginning of today</div>
+        <div class='backouts floaty'><div class='omg'>{{ backouts['backouts'] }}</div><br> backouts were performed for {{ backouts['total'] }}     pushes since the beginning of {{ backouts['startdate'] }}</div>
+        <div class='backouts floaty'><div class='omg'>{{ today['backouts'] }}</div><br> backouts were performed for {{ today['total'] }}     pushes since the beginning of today</div>
     </div>
     <div id="container"></div>
 
@@ -25,9 +25,7 @@
               text: 'closures'
           },
           xAxis: {
-
             categories: {{ total["x"]|safe }},
-
           },
           yAxis: {
             title: {
