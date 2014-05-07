@@ -21,6 +21,10 @@
     margin:auto;
 }
 
+.boldy {
+    font-weight: bold;
+}
+
 #container {
     width:1000px;
     height: 400px;
