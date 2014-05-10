@@ -10,7 +10,9 @@
         <div class='backouts floaty'><div class='omg'>{{ backouts['backouts'] }}</div><br> backouts were performed for {{ backouts['total'] }}     pushes since the beginning of {{ backouts['startdate'] }}</div>
         <div class='backouts floaty'><div class='omg'>{{ today['backouts'] }}</div><br> backouts were performed for {{ today['total'] }}     pushes since the beginning of today</div>
     </div>
-    <div id="container"></div>
+    <div class='floaty' id="closuresContainer"></div>
+    <div class='floaty' id='backoutsVsPushContainer'></div>
+
     <div><a href="/?tree=mozilla-inbound">Mozilla-Inbound</a> | <a href="/?tree=mozilla-central">Mozilla-Central</a> |
          <a href="/?tree=fx-team">FX-Team</a></div>
   </div>
@@ -18,7 +20,7 @@
   <script src="http://code.highcharts.com/highcharts.js"></script>
   <script type="text/javascript">
   $(function () {
-      $('#container').highcharts({
+      $('#closuresContainer').highcharts({
           chart: {
               type: 'area'
           },
@@ -46,7 +48,32 @@
                 stacking: 'normal',
             },
           }
-
+      });
+      $('#backoutsVsPushContainer').highcharts({
+        chart: {
+          type: 'line',
+        },
+        title: {
+          'text': 'Pushes and Backouts',
+        },
+        xAxis: {
+          categories: {{ total["x"]|safe }},
+        },
+        yAxis: {
+          title: {
+            text: "Pushes",
+          },
+        },
+        series: [
+          {
+            name: "backouts",
+            data: [172, 145, 202,156,187,200,177,260,217,227,214,276,263,290,262,304,244,248,283,320,298,59]
+          },
+          {
+            name: "pushes",
+            data: [3261,2653,3255,2736,2684,3336,3103,3456,3239,3416,3474,4156,4153,4382,3854,4383,3599,4525,4908,4896,4701,105]
+          },
+        ],
       });
   });
   </script>
