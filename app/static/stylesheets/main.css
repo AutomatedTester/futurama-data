@@ -18,6 +18,9 @@
 .floaty {
     float: left;
 }
+.wide {
+    width: 1000px;
+}
 .yetAnotherContainer {
     margin:auto;
 }
