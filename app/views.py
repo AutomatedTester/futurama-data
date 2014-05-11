@@ -39,13 +39,30 @@ def index():
         yesday.day if yesday.day > 9 else "0%s" % yesday.day)
     backouts_since_yesterday = backouts(tree, yesterday)
     tody = datetime.datetime.now()
+
+    backed = 0
+    today_pushes = 0
+    backoutln = re.compile('^.*[b,B]ackout.*')
+    backoutln2 = re.compile('^.*[b,B]acked out.*')
+    backoutln3 = re.compile('^.*[b,B]ack out.*')
+    for resp in backouts_since_yesterday['pushes']:
+
+        if (datetime.date.fromtimestamp(int(backouts_since_yesterday['pushes'][resp]['date'])) == datetime.date.today()):
+            today_pushes += 1
+            for chnge in range(len(backouts_since_yesterday['pushes'][resp]['changesets'])):
+                if (backoutln.match(backouts_since_yesterday['pushes'][resp]['changesets'][chnge]['desc']) or
+                    backoutln2.match(backouts_since_yesterday['pushes'][resp]['changesets'][chnge]['desc']) or
+                    backoutln3.match(backouts_since_yesterday['pushes'][resp]['changesets'][chnge]['desc'])):
+
+                    if (datetime.date.fromtimestamp(int(backouts_since_yesterday['pushes'][resp]['date'])) == datetime.date.today()):
+                        backed += 1
+
     today = "%s-%s-%s" % (tody.year,
         tody.month if tody.month > 9 else "0%s" % tody.month,
         tody.day if tody.day > 9 else "0%s" % tody.day)
-    backouts_today = backouts(tree, today)
 
     return render_template("index.html", total={"x": x, "y": y},
-        backouts=backouts_since_yesterday, today=backouts_today,
+        backouts=backouts_since_yesterday, today={"total": today_pushes, "backouts": backed, "search_date": today},
         tree=tree)
 
 
@@ -114,4 +131,7 @@ def backouts(tree, search_date):
                 backed += 1
 
 
-    return {"total": len(total_pushes), "backouts": backed, "startdate": search_date}
+    return {"total": len(total_pushes),
+            "backouts": backed,
+            "startdate": search_date,
+            "pushes": total_pushes}
