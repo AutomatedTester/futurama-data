@@ -33,11 +33,11 @@ def index():
         for _x in data[1].keys():
             y[_x].append(data[1][_x].total_seconds() / 3600)
 
-    yesday = datetime.datetime.now() - timedelta(1)
-    yesterday = "%s-%s-%s" % (yesday.year,
-        yesday.month if yesday.month > 9 else "0%s" % yesday.month,
-        yesday.day if yesday.day > 9 else "0%s" % yesday.day)
-    backouts_since_yesterday = backouts(tree, yesterday)
+    wek = datetime.datetime.now() - timedelta(7)
+    week = "%s-%s-%s" % (wek.year,
+        wek.month if wek.month > 9 else "0%s" % wek.month,
+        wek.day if wek.day > 9 else "0%s" % wek.day)
+    backouts_since_week = backouts(tree, week)
     tody = datetime.datetime.now()
 
     backed = 0
@@ -45,16 +45,16 @@ def index():
     backoutln = re.compile('^.*[b,B]ackout.*')
     backoutln2 = re.compile('^.*[b,B]acked out.*')
     backoutln3 = re.compile('^.*[b,B]ack out.*')
-    for resp in backouts_since_yesterday['pushes']:
+    for resp in backouts_since_week['pushes']:
 
-        if (datetime.date.fromtimestamp(int(backouts_since_yesterday['pushes'][resp]['date'])) == datetime.date.today()):
+        if (datetime.date.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])) == datetime.date.today()):
             today_pushes += 1
-            for chnge in range(len(backouts_since_yesterday['pushes'][resp]['changesets'])):
-                if (backoutln.match(backouts_since_yesterday['pushes'][resp]['changesets'][chnge]['desc']) or
-                    backoutln2.match(backouts_since_yesterday['pushes'][resp]['changesets'][chnge]['desc']) or
-                    backoutln3.match(backouts_since_yesterday['pushes'][resp]['changesets'][chnge]['desc'])):
+            for chnge in range(len(backouts_since_week['pushes'][resp]['changesets'])):
+                if (backoutln.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc']) or
+                    backoutln2.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc']) or
+                    backoutln3.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc'])):
 
-                    if (datetime.date.fromtimestamp(int(backouts_since_yesterday['pushes'][resp]['date'])) == datetime.date.today()):
+                    if (datetime.date.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])) == datetime.date.today()):
                         backed += 1
 
     today = "%s-%s-%s" % (tody.year,
@@ -62,7 +62,7 @@ def index():
         tody.day if tody.day > 9 else "0%s" % tody.day)
 
     return render_template("index.html", total={"x": x, "y": y},
-        backouts=backouts_since_yesterday, today={"total": today_pushes, "backouts": backed, "search_date": today},
+        backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
         tree=tree)
 
 
