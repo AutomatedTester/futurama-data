@@ -23,7 +23,6 @@ def index():
 
     c_data = [(datetime.datetime.strptime(k, "%Y-%m"), closure_months[k]) for k in sorted(closure_months.keys())]
     x = ["%s-%s" % (date.year, date.month if date.month > 9 else "0%s" % date.month) for (date, value) in c_data]
-    print x
     for data in c_data:
         # We need to make a sparse array so we can have the 2 arrays the same length when plotting
         not_filled = [k for k in y.keys() if k not in data[1].keys()]
@@ -112,7 +111,6 @@ def main(tree):
             closed_reason = None
         elif item['action'] == 'added':
             Added = item['when']
-            print "Added on :%s" % item['when']
 
     return month, dates
 
