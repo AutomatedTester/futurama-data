@@ -55,6 +55,7 @@ def index():
 
                     if (datetime.date.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])) == datetime.date.today()):
                         backed += 1
+                        break
 
     today = "%s-%s-%s" % (tody.year,
         tody.month if tody.month > 9 else "0%s" % tody.month,
@@ -132,6 +133,8 @@ def backouts(tree, search_date):
         total_pushes.pop(key, None)
 
     for resp in total_pushes:
+        if resp == '43338':
+            import pdb; pdb.set_trace()
         for chnge in range(len(total_pushes[resp]['changesets'])):
             if (backoutln.match(total_pushes[resp]['changesets'][chnge]['desc']) or
                 backoutln2.match(total_pushes[resp]['changesets'][chnge]['desc']) or
