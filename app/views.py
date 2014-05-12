@@ -121,12 +121,23 @@ def backouts(tree, search_date):
     backoutln = re.compile('^.*[b,B]ackout.*')
     backoutln2 = re.compile('^.*[b,B]acked out.*')
     backoutln3 = re.compile('^.*[b,B]ack out.*')
+    merges = re.compile('^.*[M,m]erge .* to .*')
+    keys_to_pop = []
+    for resp in total_pushes:
+        for chnge in range(len(total_pushes[resp]['changesets'])):
+            if merges.match(total_pushes[resp]['changesets'][chnge]['desc']):
+                keys_to_pop.append(resp)
+
+    for key in keys_to_pop:
+        total_pushes.pop(key, None)
+
     for resp in total_pushes:
         for chnge in range(len(total_pushes[resp]['changesets'])):
             if (backoutln.match(total_pushes[resp]['changesets'][chnge]['desc']) or
                 backoutln2.match(total_pushes[resp]['changesets'][chnge]['desc']) or
                 backoutln3.match(total_pushes[resp]['changesets'][chnge]['desc'])):
                 backed += 1
+                break
 
 
     return {"total": len(total_pushes),

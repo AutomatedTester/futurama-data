@@ -7,8 +7,8 @@
   <div class='main'>
     <div class='main'>Below are the details for <span class='boldy'>{{ tree }}</span></div>
     <div class='yetAnotherContainer'>
-        <div class='backouts floaty'><div class='omg'>{{ backouts['backouts'] }}</div><br> backouts were performed for {{ backouts['total'] }}     pushes since the beginning of {{ backouts['startdate'] }} (roughly the last 7 days)</div>
-        <div class='backouts floaty'><div class='omg'>{{ today['backouts'] }}</div><br> backouts were performed for {{ today['total'] }}     pushes since the beginning of today</div>
+        <div class='backouts floaty'><div class='omg'>{{ backouts['backouts'] }}</div><br> backouts were performed for {{ backouts['total'] }}     pushes since the beginning of {{ backouts['startdate'] }} (roughly the last 7 days). Merges are not counted</div>
+        <div class='backouts floaty'><div class='omg'>{{ today['backouts'] }}</div><br> backouts were performed for {{ today['total'] }}     pushes since the beginning of today. Merges are not counted</div>
     </div>
     <div class='floaty wide' id="closuresContainer"></div>
     <div class='floaty wide' id='backoutsVsPushContainer'></div>
