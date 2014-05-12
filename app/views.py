@@ -133,8 +133,6 @@ def backouts(tree, search_date):
         total_pushes.pop(key, None)
 
     for resp in total_pushes:
-        if resp == '43338':
-            import pdb; pdb.set_trace()
         for chnge in range(len(total_pushes[resp]['changesets'])):
             if (backoutln.match(total_pushes[resp]['changesets'][chnge]['desc']) or
                 backoutln2.match(total_pushes[resp]['changesets'][chnge]['desc']) or
