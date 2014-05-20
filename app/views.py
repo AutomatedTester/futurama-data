@@ -10,6 +10,14 @@ HISTORIC = {
     "mozilla-inbound": {
         "total": [1307, 1101, 1162, 1238, 1334, 1153],
         "backouts": [176, 152, 157, 189, 200, 185]
+    },
+    "mozilla-central": {
+        "total": [],
+        "backouts": []
+    },
+    "fx-team": {
+        "total": [],
+        "backouts": []
     }
 }
 
