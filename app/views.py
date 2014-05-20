@@ -28,7 +28,7 @@ def index():
          'backlog': [],
          'checkin-test': []}
 
-    c_data = [(datetime.datetime.strptime(k, "%Y-%m"), closure_months[k]) for k in sorted(closure_months.keys())]
+    c_data = [(datetime.datetime.strptime(k, "%Y-%m"), closure_months[k]) for k in sorted(closure_months.keys())[-12:]]
     x = ["%s-%s" % (date.year, date.month if date.month > 9 else "0%s" % date.month) for (date, value) in c_data]
     for data in c_data:
         # We need to make a sparse array so we can have the 2 arrays the same length when plotting
