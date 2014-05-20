@@ -6,6 +6,13 @@ from flask import render_template, request
 from app import app
 import requests
 
+HISTORIC = {
+    "mozilla-inbound": {
+        "total": [1307, 1101, 1162, 1238, 1334, 1153],
+        "backouts": [176, 152, 157, 189, 200, 185]
+    }
+}
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -61,9 +68,11 @@ def index():
         tody.month if tody.month > 9 else "0%s" % tody.month,
         tody.day if tody.day > 9 else "0%s" % tody.day)
 
+    HISTORIC[tree]["dates"] = x[-6:]
+
     return render_template("index.html", total={"x": x, "y": y},
         backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
-        tree=tree)
+        tree=tree, historic=HISTORIC[tree])
 
 
 
