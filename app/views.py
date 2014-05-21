@@ -16,8 +16,8 @@ HISTORIC = {
         "backouts": []
     },
     "fx-team": {
-        "total": [],
-        "backouts": []
+        "total": [403, 357, 542, 584, 628, 464],
+        "backouts": [81, 60, 93, 110, 95, 60]
     }
 }
 
