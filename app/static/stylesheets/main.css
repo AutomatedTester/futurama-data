@@ -21,6 +21,11 @@
 .wide {
     width: 1000px;
 }
+
+.small {
+    width: 500px;
+}
+
 .yetAnotherContainer {
     margin:auto;
 }
