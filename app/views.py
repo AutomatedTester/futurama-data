@@ -8,8 +8,8 @@ import requests
 
 HISTORIC = {
     "mozilla-inbound": {
-        "total": [1307, 1101, 1162, 1238, 1334, 1153],
-        "backouts": [176, 152, 157, 189, 200, 185]
+        "total": [1193, 997, 1043, 1126, 1202, 1060],
+        "backouts": [174, 147, 162, 186, 180, 189]
     },
     "mozilla-central": {
         "total": [],
