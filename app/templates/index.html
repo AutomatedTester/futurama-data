@@ -12,6 +12,7 @@
     </div>
     <div class='floaty wide' id="closuresContainer"></div>
     <div class='floaty' id='backoutsVsPushContainer'></div>
+    <div class='floaty' id='backoutsVsPushAverageContainer'></div>
 
     <div><a href="/?tree=mozilla-inbound">Mozilla-Inbound</a> | <a href="/?tree=mozilla-central">Mozilla-Central</a> |
          <a href="/?tree=fx-team">FX-Team</a></div>
@@ -72,6 +73,28 @@
           {
             name: "pushes",
             data: {{ historic["total"] }}
+          },
+        ],
+      });
+      $('#backoutsVsPushAverageContainer').highcharts({
+        chart: {
+          type: 'line',
+        },
+        title: {
+          'text': 'Pushes and Backouts Average',
+        },
+        xAxis: {
+          categories: {{ historic['dates']|safe }},
+        },
+        yAxis: {
+          title: {
+            text: "Pushes",
+          },
+        },
+        series: [
+          {
+            name: "backout vs push",
+            data: {{ historic["average"] }}
           },
         ],
       });
