@@ -81,7 +81,7 @@
           type: 'line',
         },
         title: {
-          'text': 'Pushes and Backouts Average',
+          'text': 'Backouts against Pushes Ratio',
         },
         xAxis: {
           categories: {{ historic['dates']|safe }},
@@ -93,8 +93,8 @@
         },
         series: [
           {
-            name: "backout vs push",
-            data: {{ historic["average"] }}
+            name: "backout/push ratio",
+            data: {{ historic["ratio"] }}
           },
         ],
       });

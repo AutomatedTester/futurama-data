@@ -80,7 +80,7 @@ def index():
     temp_list = x[-7:]
     HISTORIC[tree]["dates"] = temp_list[0:6]
 
-    HISTORIC[tree]["average"] = [float(HISTORIC[tree]["backouts"][it])/float(HISTORIC[tree]["total"][it]) * 100 for it in xrange(len(HISTORIC[tree]["total"]))]
+    HISTORIC[tree]["ratio"] = [float(HISTORIC[tree]["backouts"][it])/float(HISTORIC[tree]["total"][it]) * 100 for it in xrange(len(HISTORIC[tree]["total"]))]
     return render_template("index.html", total={"x": x, "y": y},
         backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
         tree=tree, historic=HISTORIC[tree])
