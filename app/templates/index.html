@@ -81,14 +81,17 @@
           type: 'line',
         },
         title: {
-          'text': 'Backouts against Pushes Ratio',
+          'text': 'Monthly Pushes per Backout',
         },
         xAxis: {
           categories: {{ historic['dates']|safe }},
+          title: {
+            text: "Month"
+          }
         },
         yAxis: {
           title: {
-            text: "Pushes",
+            text: "Pushes / Backouts",
           },
         },
         series: [
