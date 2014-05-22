@@ -14,3 +14,15 @@ class TestEndpoints(object):
     def test_index(self):
         rv = self.app.get('/')
         assert "Futurama" in rv.data
+
+    def test_mozilla_inbound(self):
+        rv = self.app.get('/?tree=mozilla-inbound')
+        assert "Futurama" in rv.data
+
+    def test_mozilla_central(self):
+        rv = self.app.get('/?tree=mozilla-central')
+        assert "Futurama" in rv.data
+
+    def test_fx_team(self):
+        rv = self.app.get('/?tree=fx-team')
+        assert "Futurama" in rv.data
