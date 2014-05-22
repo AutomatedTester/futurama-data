@@ -76,7 +76,9 @@ def index():
         tody.month if tody.month > 9 else "0%s" % tody.month,
         tody.day if tody.day > 9 else "0%s" % tody.day)
 
-    HISTORIC[tree]["dates"] = x[-6:]
+    # Temporary hack until I can get data from a proper source
+    temp_list = x[-7:]
+    HISTORIC[tree]["dates"] = temp_list[0:6]
 
     HISTORIC[tree]["average"] = [float(HISTORIC[tree]["backouts"][it])/float(HISTORIC[tree]["total"][it]) * 100 for it in xrange(len(HISTORIC[tree]["total"]))]
     return render_template("index.html", total={"x": x, "y": y},
