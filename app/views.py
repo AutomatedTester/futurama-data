@@ -60,7 +60,6 @@ def index():
     backoutln2 = re.compile('^.*[b,B]acked out.*')
     backoutln3 = re.compile('^.*[b,B]ack out.*')
     for resp in backouts_since_week['pushes']:
-
         if (datetime.date.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])) == datetime.date.today()):
             today_pushes += 1
             for chnge in range(len(backouts_since_week['pushes'][resp]['changesets'])):
@@ -84,7 +83,6 @@ def index():
     return render_template("index.html", total={"x": x, "y": y},
         backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
         tree=tree, historic=HISTORIC[tree])
-
 
 
 def main(tree):
@@ -159,7 +157,6 @@ def backouts(tree, search_date):
                 backoutln3.match(total_pushes[resp]['changesets'][chnge]['desc'])):
                 backed += 1
                 break
-
 
     return {"total": len(total_pushes),
             "backouts": backed,
