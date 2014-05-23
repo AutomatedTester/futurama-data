@@ -23,6 +23,7 @@ HISTORIC = {
 
 @app.route('/')
 @app.route('/index')
+@app.route('/index.html')
 def index():
     tree = request.args.get('tree', 'mozilla-inbound')
     closure_months, closure_dates = main(tree)
