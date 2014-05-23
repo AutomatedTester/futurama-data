@@ -70,13 +70,13 @@
             },
           },
           series: [{
-            name: "Backouts Per Hour",
+            name: "Backouts Per Hour for the today",
             data: [{% for key, value in backout_hours|dictsort %}
                           {{ value}},
                          {% endfor %}]
             },
             {
-              name: "Backouts per hour for last week",
+              name: "Backouts in an hour for last week",
               data: [{% for key, value in backouts["backoutHours"]|dictsort %}
                             {{ value}},
                            {% endfor %}]
@@ -139,7 +139,7 @@
         },
         series: [
           {
-            name: "backout/push ratio",
+            name: "backout/push ratio (Higher is better)",
             data: {{ historic["ratio"] }}
           },
         ],
