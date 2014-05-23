@@ -66,7 +66,7 @@
           },
           yAxis: {
             title: {
-              text: "backouts in hours",
+              text: "backouts per hour",
             },
           },
           series: [{
@@ -74,6 +74,12 @@
             data: [{% for key, value in backout_hours|dictsort %}
                           {{ value}},
                          {% endfor %}]
+            },
+            {
+              name: "Backouts per hour for last week",
+              data: [{% for key, value in backouts["backoutHours"]|dictsort %}
+                            {{ value}},
+                           {% endfor %}]
           }],
           plotOptions: {
           },

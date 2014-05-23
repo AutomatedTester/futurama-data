@@ -91,7 +91,7 @@ def index():
     HISTORIC[tree]["dates"] = temp_list[0:6]
 
     HISTORIC[tree]["ratio"] = [float(HISTORIC[tree]["backouts"][it])/float(HISTORIC[tree]["total"][it]) * 100 for it in xrange(len(HISTORIC[tree]["total"]))]
-    return render_template("index.html", total={"x": x, "y": y},backout_hours=backout_hours,
+    return render_template("index.html", total={"x": x, "y": y}, backout_hours=backout_hours,
         backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
         tree=tree, historic=HISTORIC[tree])
 
@@ -161,15 +161,26 @@ def backouts(tree, search_date):
     for key in keys_to_pop:
         total_pushes.pop(key, None)
 
+    backout_hours = {0: 0, 1: 0, 2: 0, 3: 0,4:0, 5: 0,
+                    6: 0, 7: 0, 8: 0, 9: 0, 10: 0,
+                    11: 0, 12: 0, 13: 0, 14: 0,
+                    15: 0, 16: 0, 17: 0, 18: 0,
+                    19: 0, 20: 0, 21: 0, 22: 0,
+                    23: 0}
     for resp in total_pushes:
         for chnge in range(len(total_pushes[resp]['changesets'])):
             if (backoutln.match(total_pushes[resp]['changesets'][chnge]['desc']) or
                 backoutln2.match(total_pushes[resp]['changesets'][chnge]['desc']) or
                 backoutln3.match(total_pushes[resp]['changesets'][chnge]['desc'])):
                 backed += 1
+
+                # Lets also track what hour the backouts happened in
+                bhour = datetime.datetime.fromtimestamp(int(total_pushes[resp]['date'])).hour
+                backout_hours[bhour] = backout_hours[bhour] + 1
                 break
 
     return {"total": len(total_pushes),
             "backouts": backed,
             "startdate": search_date,
-            "pushes": total_pushes}
+            "pushes": total_pushes,
+            "backoutHours": backout_hours}
