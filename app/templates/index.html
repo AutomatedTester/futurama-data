@@ -11,6 +11,7 @@
         <div class='backouts floaty'><div class='omg'>{{ today['backouts'] }}</div><br> backouts were performed for {{ today['total'] }}     pushes since the beginning of today. Merges are not counted</div>
     </div>
     <div class='floaty wide' id="closuresContainer"></div>
+    <div class='floaty wide' id="backoutPerHourContainer"></div>
     <div class='floaty small' id='backoutsVsPushContainer'></div>
     <div class='floaty small' id='backoutsVsPushAverageContainer'></div>
 
@@ -49,6 +50,42 @@
                 stacking: 'normal',
             },
           }
+      });
+
+      $('#backoutPerHourContainer').highcharts({
+          chart: {
+              defaultSeriesType: 'column'
+          },
+          title: {
+              text: 'Backouts Per Hour'
+          },
+          xAxis: {
+            categories: [{% for key, value in backout_hours|dictsort %}
+                          {{ key|safe}},
+                         {% endfor %}]
+          },
+          yAxis: {
+            title: {
+              text: "backouts in hours",
+            },
+          },
+          series: [{
+            name: "Backouts Per Hour",
+            data: [{% for key, value in backout_hours|dictsort %}
+                          {{ value}},
+                         {% endfor %}]
+          }],
+          plotOptions: {
+          },
+          legend: {
+            layout: 'horizontal',
+            floating: true,
+            backgroundColor: '#FFFFFF',
+            align: 'right',
+            verticalAlign: 'top',
+            y: 60,
+            x: -60
+          },
       });
       $('#backoutsVsPushContainer').highcharts({
         chart: {

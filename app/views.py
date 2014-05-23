@@ -60,6 +60,12 @@ def index():
     backoutln = re.compile('^.*[b,B]ackout.*')
     backoutln2 = re.compile('^.*[b,B]acked out.*')
     backoutln3 = re.compile('^.*[b,B]ack out.*')
+    backout_hours = {0: 0, 1: 0, 2: 0, 3: 0,4:0, 5: 0,
+                    6: 0, 7: 0, 8: 0, 9: 0, 10: 0,
+                    11: 0, 12: 0, 13: 0, 14: 0,
+                    15: 0, 16: 0, 17: 0, 18: 0,
+                    19: 0, 20: 0, 21: 0, 22: 0,
+                    23: 0}
     for resp in backouts_since_week['pushes']:
         if (datetime.date.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])) == datetime.date.today()):
             today_pushes += 1
@@ -70,6 +76,10 @@ def index():
 
                     if (datetime.date.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])) == datetime.date.today()):
                         backed += 1
+
+                        # Lets also track what hour the backouts happened in
+                        bhour = datetime.datetime.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])).hour
+                        backout_hours[bhour] = backout_hours[bhour] + 1
                         break
 
     today = "%s-%s-%s" % (tody.year,
@@ -81,7 +91,7 @@ def index():
     HISTORIC[tree]["dates"] = temp_list[0:6]
 
     HISTORIC[tree]["ratio"] = [float(HISTORIC[tree]["backouts"][it])/float(HISTORIC[tree]["total"][it]) * 100 for it in xrange(len(HISTORIC[tree]["total"]))]
-    return render_template("index.html", total={"x": x, "y": y},
+    return render_template("index.html", total={"x": x, "y": y},backout_hours=backout_hours,
         backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
         tree=tree, historic=HISTORIC[tree])
 
