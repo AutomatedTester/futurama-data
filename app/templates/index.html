@@ -60,6 +60,9 @@
               text: 'Backouts Per Hour'
           },
           xAxis: {
+            title: {
+              text: "Hours (PDT)",
+            },
             categories: [{% for key, value in backout_hours|dictsort %}
                           {{ key|safe}},
                          {% endfor %}]
@@ -76,7 +79,7 @@
                          {% endfor %}]
             },
             {
-              name: "Backouts in an hour for last week",
+              name: "Backouts in the hour (aggregated over a week)",
               data: [{% for key, value in backouts["backoutHours"]|dictsort %}
                             {{ value}},
                            {% endfor %}]
