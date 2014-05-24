@@ -65,10 +65,13 @@ def index():
     backoutln2 = re.compile('^.*[b,B]acked out.*')
     backoutln3 = re.compile('^.*[b,B]ack out.*')
     backout_hours = [0] * 24
+    pushes_hours = [0] * 24
 
     for resp in backouts_since_week['pushes']:
         if (datetime.date.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])) == datetime.date.today()):
             today_pushes += 1
+            bhour = datetime.datetime.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])).hour
+            pushes_hours[bhour] = pushes_hours[bhour] + 1
             for chnge in range(len(backouts_since_week['pushes'][resp]['changesets'])):
                 if (backoutln.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc']) or
                     backoutln2.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc']) or
@@ -91,7 +94,7 @@ def index():
     HISTORIC[tree]["dates"] = temp_list[0:6]
 
     HISTORIC[tree]["ratio"] = [float(HISTORIC[tree]["backouts"][it])/float(HISTORIC[tree]["total"][it]) * 100 for it in xrange(len(HISTORIC[tree]["total"]))]
-    return render_template("index.html", total={"x": x, "y": y}, backout_hours=backout_hours,
+    return render_template("index.html", total={"x": x, "y": y}, backout_hours=backout_hours, pushes_hours=pushes_hours,
         backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
         tree=tree, historic=HISTORIC[tree])
 
@@ -162,8 +165,12 @@ def backouts(tree, search_date):
         total_pushes.pop(key, None)
 
     backout_hours = [0] * 24
+    pushes_hours = [0] * 24
 
     for resp in total_pushes:
+        # Lets also track what hour the push happened in
+        bhour = datetime.datetime.fromtimestamp(int(total_pushes[resp]['date'])).hour
+        pushes_hours[bhour] = pushes_hours[bhour] + 1
         for chnge in range(len(total_pushes[resp]['changesets'])):
             if (backoutln.match(total_pushes[resp]['changesets'][chnge]['desc']) or
                 backoutln2.match(total_pushes[resp]['changesets'][chnge]['desc']) or
@@ -179,4 +186,5 @@ def backouts(tree, search_date):
             "backouts": backed,
             "startdate": search_date,
             "pushes": total_pushes,
-            "backoutHours": backout_hours}
+            "backoutHours": backout_hours,
+            "pushesHours": pushes_hours}

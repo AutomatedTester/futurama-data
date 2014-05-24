@@ -11,7 +11,8 @@
         <div class='backouts floaty'><div class='omg'>{{ today['backouts'] }}</div><br> backouts were performed for {{ today['total'] }}     pushes since the beginning of today. Merges are not counted</div>
     </div>
     <div class='floaty wide' id="closuresContainer"></div>
-    <div class='floaty wide' id="backoutPerHourContainer"></div>
+    <div class='floaty small' id="backoutPerHourContainer"></div>
+    <div class='floaty small' id="landingsPerHourContainer"></div>
     <div class='floaty small' id='backoutsVsPushContainer'></div>
     <div class='floaty small' id='backoutsVsPushAverageContainer'></div>
 
@@ -57,7 +58,7 @@
               defaultSeriesType: 'column'
           },
           title: {
-              text: 'Backouts Per Hour'
+              text: 'Backouts and Landings Per Hour for today'
           },
           xAxis: {
             title: {
@@ -68,7 +69,7 @@
           },
           yAxis: {
             title: {
-              text: "backouts per hour",
+              text: "pushes per hour",
             },
           },
           series: [{
@@ -78,8 +79,8 @@
                          {% endfor %}]
             },
             {
-              name: "Backouts in the hour (aggregated over a week)",
-              data: [{% for value in backouts["backoutHours"] %}
+              name: "Landings per hour for today",
+              data: [{% for value in pushes_hours %}
                             {{ value}},
                            {% endfor %}]
           }],
@@ -95,6 +96,49 @@
             x: -60
           },
       });
+    $('#landingsPerHourContainer').highcharts({
+        chart: {
+            defaultSeriesType: 'column'
+        },
+        title: {
+            text: 'Backouts and landings aggregated to the hour for the week'
+        },
+        xAxis: {
+          title: {
+            text: "Hours (PDT)",
+          },
+          categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+                       16, 17, 18, 19, 20, 21, 22, 23]
+        },
+        yAxis: {
+          title: {
+            text: "pushes per hour",
+          },
+        },
+        series: [{
+          name: "Pushes (aggregated over a week)",
+          data: [{% for value in backouts["pushesHours"] %}
+                        {{ value}},
+                       {% endfor %}]
+          },
+          {
+            name: "Backouts (aggregated over a week)",
+            data: [{% for value in backouts["backoutHours"] %}
+                          {{ value}},
+                         {% endfor %}]
+        }],
+        plotOptions: {
+        },
+        legend: {
+          layout: 'horizontal',
+          floating: true,
+          backgroundColor: '#FFFFFF',
+          align: 'right',
+          verticalAlign: 'top',
+          y: 60,
+          x: -60
+        },
+    });
       $('#backoutsVsPushContainer').highcharts({
         chart: {
           type: 'line',
