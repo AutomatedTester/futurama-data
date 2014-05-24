@@ -64,12 +64,8 @@ def index():
     backoutln = re.compile('^.*[b,B]ackout.*')
     backoutln2 = re.compile('^.*[b,B]acked out.*')
     backoutln3 = re.compile('^.*[b,B]ack out.*')
-    backout_hours = {0: 0, 1: 0, 2: 0, 3: 0,4:0, 5: 0,
-                    6: 0, 7: 0, 8: 0, 9: 0, 10: 0,
-                    11: 0, 12: 0, 13: 0, 14: 0,
-                    15: 0, 16: 0, 17: 0, 18: 0,
-                    19: 0, 20: 0, 21: 0, 22: 0,
-                    23: 0}
+    backout_hours = [0] * 24
+
     for resp in backouts_since_week['pushes']:
         if (datetime.date.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])) == datetime.date.today()):
             today_pushes += 1
@@ -165,12 +161,8 @@ def backouts(tree, search_date):
     for key in keys_to_pop:
         total_pushes.pop(key, None)
 
-    backout_hours = {0: 0, 1: 0, 2: 0, 3: 0,4:0, 5: 0,
-                    6: 0, 7: 0, 8: 0, 9: 0, 10: 0,
-                    11: 0, 12: 0, 13: 0, 14: 0,
-                    15: 0, 16: 0, 17: 0, 18: 0,
-                    19: 0, 20: 0, 21: 0, 22: 0,
-                    23: 0}
+    backout_hours = [0] * 24
+
     for resp in total_pushes:
         for chnge in range(len(total_pushes[resp]['changesets'])):
             if (backoutln.match(total_pushes[resp]['changesets'][chnge]['desc']) or

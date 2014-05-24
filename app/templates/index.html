@@ -63,9 +63,8 @@
             title: {
               text: "Hours (PDT)",
             },
-            categories: [{% for key, value in backout_hours|dictsort %}
-                          {{ key|safe}},
-                         {% endfor %}]
+            categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+                         16, 17, 18, 19, 20, 21, 22, 23]
           },
           yAxis: {
             title: {
@@ -74,13 +73,13 @@
           },
           series: [{
             name: "Backouts Per Hour for the today",
-            data: [{% for key, value in backout_hours|dictsort %}
+            data: [{% for value in backout_hours %}
                           {{ value}},
                          {% endfor %}]
             },
             {
               name: "Backouts in the hour (aggregated over a week)",
-              data: [{% for key, value in backouts["backoutHours"]|dictsort %}
+              data: [{% for value in backouts["backoutHours"] %}
                             {{ value}},
                            {% endfor %}]
           }],
