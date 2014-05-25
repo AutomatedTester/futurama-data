@@ -11,8 +11,8 @@
         <div class='backouts floaty'><div class='omg'>{{ today['backouts'] }}</div><br> backouts were performed for {{ today['total'] }}     pushes since the beginning of today. Merges are not counted</div>
     </div>
     <div class='floaty wide' id="closuresContainer"></div>
-    <div class='floaty small' id="backoutPerHourContainer"></div>
-    <div class='floaty small' id="landingsPerHourContainer"></div>
+    <div class='floaty wide' id="backoutPerHourContainer"></div>
+    <div class='floaty wide' id="landingsPerHourContainer"></div>
     <div class='floaty small' id='backoutsVsPushContainer'></div>
     <div class='floaty small' id='backoutsVsPushAverageContainer'></div>
 
@@ -116,13 +116,13 @@
           },
         },
         series: [{
-          name: "Pushes (aggregated over a week)",
+          name: "Pushes",
           data: [{% for value in backouts["pushesHours"] %}
                         {{ value}},
                        {% endfor %}]
           },
           {
-            name: "Backouts (aggregated over a week)",
+            name: "Backouts",
             data: [{% for value in backouts["backoutHours"] %}
                           {{ value}},
                          {% endfor %}]
