@@ -74,18 +74,18 @@
             },
           },
           series: [{
-            name: "Backouts Per Hour for the today",
+            name: "backouts",
             data: [{% for value in backout_hours %}
                           {{ value}},
                          {% endfor %}],
-            color: '#7CB5EC'
+            color: '#434348'
             },
             {
-              name: "Landings per hour for today",
+              name: "pushes",
               data: [{% for value in pushes_hours %}
                             {{ value}},
                            {% endfor %}],
-              color: "#434348"
+              color: "#7CB5EC"
           }],
           plotOptions: {
           },
