@@ -31,6 +31,7 @@ HISTORIC = {
 def index():
     tree = request.args.get('tree', 'mozilla-inbound')
     closure_months, closure_dates, status = main(tree)
+    uptime = get_uptime_stats(closure_months)
     x = []
     y = {'no reason': [],
          'checkin-test': [],
@@ -39,7 +40,8 @@ def index():
          'other': [],
          'planned': [],
          'backlog': [],
-         'checkin-test': []}
+         'checkin-test': [],
+         'total': []}
 
     c_data = [(datetime.datetime.strptime(k, "%Y-%m"), closure_months[k]) for k in sorted(closure_months.keys())[-12:]]
     x = ["%s-%s" % (date.year, date.month if date.month > 9 else "0%s" % date.month) for (date, value) in c_data]
@@ -96,7 +98,7 @@ def index():
     HISTORIC[tree]["ratio"] = [float(HISTORIC[tree]["backouts"][it])/float(HISTORIC[tree]["total"][it]) * 100 for it in xrange(len(HISTORIC[tree]["total"]))]
     return render_template("index.html", total={"x": x, "y": y}, backout_hours=backout_hours, pushes_hours=pushes_hours,
         backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
-        tree=tree, historic=HISTORIC[tree], status=status)
+        tree=tree, historic=HISTORIC[tree], status=status, uptime=uptime)
 
 
 def main(tree):
@@ -107,7 +109,7 @@ def main(tree):
     closed_reason = None
     dates = {}
     month = {}
-
+    total = datetime.timedelta(0)
     Added = None
     status = results['logs'][0]['action']
     for item in reversed(results['logs']):
@@ -124,22 +126,26 @@ def main(tree):
 
             if closed.date().isoformat() in dates:
                 try:
+                    dates[closed.date().isoformat()]['total'] = dates[closed.date().isoformat()]['total'] + delta
                     dates[closed.date().isoformat()][closed_reason] = dates[closed.date().isoformat()][closed_reason] + delta
                 except:
                     dates[closed.date().isoformat()][closed_reason] = delta
             else:
-                dates[closed.date().isoformat()] = {closed_reason: delta}
+                dates[closed.date().isoformat()] = {'total': delta, closed_reason: delta}
 
             year_month = "%s-%s" % (closed.date().year, closed.date().month if closed.date().month >= 10 else '0%s' % closed.date().month)
 
             if year_month not in ['2012-06', '2012-07']:
                 if year_month in month:
+                    month[year_month]['total'] = month[year_month]['total'] + delta
                     try:
                         month[year_month][closed_reason] = month[year_month][closed_reason] + delta
                     except:
                         month[year_month][closed_reason] = delta
                 else:
-                    month[year_month] = { closed_reason: delta}
+                    month[year_month] = {'total': delta, closed_reason: delta}
+
+                total += delta
 
             closed = None
             closed_reason = None
@@ -189,3 +195,16 @@ def backouts(tree, search_date):
             "pushes": total_pushes,
             "backoutHours": backout_hours,
             "pushesHours": pushes_hours}
+
+def get_uptime_stats(closure_months):
+    from calendar import monthrange
+    days_in_month = [monthrange(*[ int(y) for y in x.split('-')])[1] for x in sorted(closure_months.keys())[-12:]]
+    total_hours = [closure_months[x]['total'].total_seconds() for x in sorted(closure_months.keys())[-12:]]
+    count = 0
+    result = []
+    for days in days_in_month:
+        total_secs = days * 24 * 60 * 60
+        result.append(100 - ((total_hours[count]/total_secs) * 100))
+        count = count + 1
+
+    return result

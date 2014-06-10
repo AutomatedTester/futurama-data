@@ -11,6 +11,7 @@
         <div class='backouts floaty'><div class='omg'>{{ today['backouts'] }}</div><br> backouts were performed for {{ today['total'] }}     pushes since the beginning of today. Merges are not counted</div>
     </div>
     <div class='floaty wide' id="closuresContainer"></div>
+    <div class='floaty wide' id="percentageUpTime"></div>
     <div class='floaty wide' id="backoutPerHourContainer"></div>
     <div class='floaty wide' id="landingsPerHourContainer"></div>
     <div class='floaty small' id='backoutsVsPushContainer'></div>
@@ -41,11 +42,43 @@
           },
           series: [
           {% for tot in total["y"] %}
+          {% if tot != 'total' %}
           {
+
               name: "{{ tot }}",
               data: {{ total["y"][tot] }}
+
           },
+          {% endif %}
           {% endfor %}
+          ],
+          plotOptions: {
+            area: {
+                stacking: 'normal',
+            },
+          }
+      });
+
+      $('#percentageUpTime').highcharts({
+          chart: {
+              type: 'line'
+          },
+          title: {
+              text: 'Tree Uptime'
+          },
+          xAxis: {
+            categories: {{ total["x"]|safe }},
+          },
+          yAxis: {
+            title: {
+              text: "Percentage Uptime",
+            },
+          },
+          series: [
+          {
+              name: "Uptime (Higher is better)",
+              data: {{ uptime }}
+          },
           ],
           plotOptions: {
             area: {
