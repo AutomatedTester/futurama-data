@@ -14,8 +14,7 @@
     <div class='floaty wide' id="percentageUpTime"></div>
     <div class='floaty wide' id="backoutPerHourContainer"></div>
     <div class='floaty wide' id="landingsPerHourContainer"></div>
-    <div class='floaty small' id='backoutsVsPushContainer'></div>
-    <div class='floaty small' id='backoutsVsPushAverageContainer'></div>
+
 
     <div><a href="/?tree=mozilla-inbound">Mozilla-Inbound</a> | <a href="/?tree=mozilla-central">Mozilla-Central</a> |
          <a href="/?tree=fx-team">FX-Team</a></div>
@@ -177,57 +176,6 @@
           x: -60
         },
     });
-      $('#backoutsVsPushContainer').highcharts({
-        chart: {
-          type: 'line',
-        },
-        title: {
-          'text': 'Pushes and Backouts',
-        },
-        xAxis: {
-          categories: {{ historic['dates']|safe }},
-        },
-        yAxis: {
-          title: {
-            text: "Pushes",
-          },
-        },
-        series: [
-          {
-            name: "backouts",
-            data: {{ historic["backouts"] }}
-          },
-          {
-            name: "pushes",
-            data: {{ historic["total"] }}
-          },
-        ],
-      });
-      $('#backoutsVsPushAverageContainer').highcharts({
-        chart: {
-          type: 'line',
-        },
-        title: {
-          'text': 'Monthly Pushes per Backout',
-        },
-        xAxis: {
-          categories: {{ historic['dates']|safe }},
-          title: {
-            text: "Month"
-          }
-        },
-        yAxis: {
-          title: {
-            text: "Pushes / Backouts",
-          },
-        },
-        series: [
-          {
-            name: "backout/push ratio (Higher is better)",
-            data: {{ historic["ratio"] }}
-          },
-        ],
-      });
   });
   </script>
 </body>
