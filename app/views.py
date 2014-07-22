@@ -6,24 +6,6 @@ from flask import render_template, request
 from app import app
 import requests
 
-HISTORIC = {
-    "mozilla-inbound": {
-        "total": [1193, 997, 1043, 1126, 1202, 1060],
-        "backouts": [174, 147, 162, 186, 180, 189]
-    },
-    "mozilla-central": {
-        "total": [],
-        "backouts": []
-    },
-    "fx-team": {
-        "total": [403, 357, 542, 584, 628, 464],
-        "backouts": [81, 60, 93, 110, 95, 60]
-    },
-    "b2g-inbound": {
-        "total": [],
-        "backouts": []
-    }
-}
 
 @app.route('/')
 @app.route('/index')
@@ -91,14 +73,9 @@ def index():
         tody.month if tody.month > 9 else "0%s" % tody.month,
         tody.day if tody.day > 9 else "0%s" % tody.day)
 
-    # Temporary hack until I can get data from a proper source
-    temp_list = x[-7:]
-    HISTORIC[tree]["dates"] = temp_list[0:6]
-
-    HISTORIC[tree]["ratio"] = [float(HISTORIC[tree]["backouts"][it])/float(HISTORIC[tree]["total"][it]) * 100 for it in xrange(len(HISTORIC[tree]["total"]))]
     return render_template("index.html", total={"x": x, "y": y}, backout_hours=backout_hours, pushes_hours=pushes_hours,
         backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
-        tree=tree, historic=HISTORIC[tree], status={"status": status, "status_reason":status_reason}, uptime=uptime)
+        tree=tree, status={"status": status, "status_reason":status_reason}, uptime=uptime)
 
 
 def main(tree):
