@@ -30,7 +30,7 @@ HISTORIC = {
 @app.route('/index.html')
 def index():
     tree = request.args.get('tree', 'mozilla-inbound')
-    closure_months, closure_dates, status = main(tree)
+    closure_months, closure_dates, status, status_reason = main(tree)
     uptime = get_uptime_stats(closure_months)
     x = []
     y = {'no reason': [],
@@ -98,7 +98,7 @@ def index():
     HISTORIC[tree]["ratio"] = [float(HISTORIC[tree]["backouts"][it])/float(HISTORIC[tree]["total"][it]) * 100 for it in xrange(len(HISTORIC[tree]["total"]))]
     return render_template("index.html", total={"x": x, "y": y}, backout_hours=backout_hours, pushes_hours=pushes_hours,
         backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
-        tree=tree, historic=HISTORIC[tree], status=status, uptime=uptime)
+        tree=tree, historic=HISTORIC[tree], status={"status": status, "status_reason":status_reason}, uptime=uptime)
 
 
 def main(tree):
@@ -112,6 +112,7 @@ def main(tree):
     total = datetime.timedelta(0)
     Added = None
     status = results['logs'][0]['action']
+    status_reason = results['logs'][0]['reason']
     for item in reversed(results['logs']):
         if item['action'] == 'closed':
             if closed is not None:
@@ -152,7 +153,7 @@ def main(tree):
         elif item['action'] == 'added':
             Added = item['when']
 
-    return month, dates, status
+    return month, dates, status, status_reason
 
 def backouts(tree, search_date):
     total_pushes = requests.get("https://hg.mozilla.org/%s/json-pushes?full=1&startdate=%s" %
