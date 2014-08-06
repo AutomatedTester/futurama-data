@@ -33,24 +33,24 @@ def index():
     backout_hours = [0] * 24
     pushes_hours = [0] * 24
 
-    #if backouts_since_week
-    for resp in backouts_since_week['pushes']:
-        if (datetime.date.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])) == datetime.date.today()):
-            today_pushes += 1
-            bhour = datetime.datetime.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])).hour
-            pushes_hours[bhour] = pushes_hours[bhour] + 1
-            for chnge in range(len(backouts_since_week['pushes'][resp]['changesets'])):
-                if (backoutln.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc']) or
-                    backoutln2.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc']) or
-                    backoutln3.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc'])):
+    if backouts_since_week is not None:
+        for resp in backouts_since_week['pushes']:
+            if (datetime.date.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])) == datetime.date.today()):
+                today_pushes += 1
+                bhour = datetime.datetime.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])).hour
+                pushes_hours[bhour] = pushes_hours[bhour] + 1
+                for chnge in range(len(backouts_since_week['pushes'][resp]['changesets'])):
+                    if (backoutln.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc']) or
+                        backoutln2.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc']) or
+                        backoutln3.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc'])):
 
-                    if (datetime.date.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])) == datetime.date.today()):
-                        backed += 1
+                        if (datetime.date.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])) == datetime.date.today()):
+                            backed += 1
 
-                        # Lets also track what hour the backouts happened in
-                        bhour = datetime.datetime.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])).hour
-                        backout_hours[bhour] = backout_hours[bhour] + 1
-                        break
+                            # Lets also track what hour the backouts happened in
+                            bhour = datetime.datetime.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])).hour
+                            backout_hours[bhour] = backout_hours[bhour] + 1
+                            break
 
     today = "%s-%s-%s" % (tody.year,
         tody.month if tody.month > 9 else "0%s" % tody.month,
@@ -116,6 +116,8 @@ def main(tree):
     return month, dates, status, status_reason
 
 def backouts(tree, search_date):
+    if tree.startswith('comm-'):
+        return None
     total_pushes = requests.get("https://hg.mozilla.org/%s/json-pushes?full=1&startdate=%s" %
         ("integration/%s" % tree if tree != "mozilla-central" else tree, search_date)).json()
     backed = 0
