@@ -14,32 +14,14 @@ def index():
     tree = request.args.get('tree', 'mozilla-inbound')
     closure_months, closure_dates, status, status_reason = main(tree)
     uptime = get_uptime_stats(closure_months)
-    x = []
-    y = {'no reason': [],
-         'checkin-test': [],
-         'checkin-compilation': [],
-         'infra': [],
-         'other': [],
-         'planned': [],
-         'backlog': [],
-         'checkin-test': [],
-         'total': []}
+    x, y = graph_data_for_uptime(closure_months)
 
-    c_data = [(datetime.datetime.strptime(k, "%Y-%m"), closure_months[k]) for k in sorted(closure_months.keys())[-12:]]
-    x = ["%s-%s" % (date.year, date.month if date.month > 9 else "0%s" % date.month) for (date, value) in c_data]
-    for data in c_data:
-        # We need to make a sparse array so we can have the 2 arrays the same length when plotting
-        not_filled = [k for k in y.keys() if k not in data[1].keys()]
-        for nf in not_filled:
-            y[nf].append(0)
-        #show me the data
-        for _x in data[1].keys():
-            y[_x].append(data[1][_x].total_seconds() / 3600)
 
     wek = datetime.datetime.now() - timedelta(7)
     week = "%s-%s-%s" % (wek.year,
         wek.month if wek.month > 9 else "0%s" % wek.month,
         wek.day if wek.day > 9 else "0%s" % wek.day)
+
     backouts_since_week = backouts(tree, week)
     tody = datetime.datetime.now()
 
@@ -51,6 +33,7 @@ def index():
     backout_hours = [0] * 24
     pushes_hours = [0] * 24
 
+    #if backouts_since_week
     for resp in backouts_since_week['pushes']:
         if (datetime.date.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])) == datetime.date.today()):
             today_pushes += 1
@@ -186,3 +169,28 @@ def get_uptime_stats(closure_months):
         count = count + 1
 
     return result
+
+def graph_data_for_uptime(closure_months):
+    x = []
+    y = {'no reason': [],
+         'checkin-test': [],
+         'checkin-compilation': [],
+         'infra': [],
+         'other': [],
+         'planned': [],
+         'backlog': [],
+         'checkin-test': [],
+         'total': []}
+
+    c_data = [(datetime.datetime.strptime(k, "%Y-%m"), closure_months[k]) for k in sorted(closure_months.keys())[-12:]]
+    x = ["%s-%s" % (date.year, date.month if date.month > 9 else "0%s" % date.month) for (date, value) in c_data]
+    for data in c_data:
+        # We need to make a sparse array so we can have the 2 arrays the same length when plotting
+        not_filled = [k for k in y.keys() if k not in data[1].keys()]
+        for nf in not_filled:
+            y[nf].append(0)
+        #show me the data
+        for _x in data[1].keys():
+            y[_x].append(data[1][_x].total_seconds() / 3600)
+
+    return x, y
