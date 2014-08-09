@@ -100,12 +100,12 @@ def main(tree):
     status_reason = results['logs'][0]['reason']
     for item in reversed(results['logs']):
         if item['action'] == 'closed':
-            if closed is not None:
+            if closed:
                 continue
             closed = datetime.datetime.strptime(item['when'], "%Y-%m-%dT%H:%M:%S")
             closed_reason = item['tags'][0] if len(item['tags']) > 0 else 'no reason'
         elif item['action'] == 'open' or item['action'] == 'approval require':
-            if closed is None:
+            if not closed:
                 continue
             opened = datetime.datetime.strptime(item['when'], "%Y-%m-%dT%H:%M:%S")
             delta = opened - closed
