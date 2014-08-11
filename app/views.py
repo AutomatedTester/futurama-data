@@ -13,7 +13,7 @@ import tree_controller
 @app.route('/index.html')
 def index():
     tree = request.args.get('tree', 'mozilla-inbound')
-    closure_months, closure_dates, status, status_reason = tree_controller.main(tree)
+    closure_months, closure_dates, status, status_reason = tree_controller.calculate_closures(tree)
     uptime = tree_controller.get_uptime_stats(closure_months)
     x, y = tree_controller.graph_data_for_uptime(closure_months)
 

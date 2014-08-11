@@ -86,7 +86,7 @@ def backouts(tree, search_date):
             "backoutHours": backout_hours,
             "pushesHours": pushes_hours}
 
-def main(tree):
+def calculate_closures(tree):
     response = requests.get('https://treestatus.mozilla.org/%s/logs?format=json&all=1' % tree, verify=False)
     results = response.json()
     delta = datetime.timedelta(0)
