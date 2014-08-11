@@ -2,6 +2,7 @@ import datetime
 import re
 
 import requests
+import bugsy
 
 
 def graph_data_for_uptime(closure_months):
@@ -139,3 +140,11 @@ def calculate_closures(tree):
             Added = item['when']
 
     return month, dates, status, status_reason
+
+def checkin_needed_count():
+    bugzilla = bugsy.Bugsy()
+    bugs = bugzilla.search_for\
+                   .keywords("checkin-needed")\
+                   .search()
+
+    return len(bugs)
