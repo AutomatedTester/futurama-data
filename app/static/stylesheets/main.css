@@ -34,6 +34,12 @@
     font-weight: bold;
 }
 
+.floatingtree {
+    position:fixed;
+    padding: 5px;
+    background: white;
+}
+
 #container {
     width:1000px;
     height: 400px;
