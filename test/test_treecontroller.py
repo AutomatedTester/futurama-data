@@ -53,11 +53,11 @@ treestatus_response = {
   ]
 }
 
+@responses.activate
 def test_we_can_get_tree_closure_status_and_values():
     responses.add(responses.GET, 'https://treestatus.mozilla.org/mozilla-inbound/logs?format=json&all=1',
-    body=json.dumps(treestatus_response), status=200,
-    content_type='application/json', match_querystring=True)
-
+                  body=json.dumps(treestatus_response), status=200,
+                  content_type='application/json', match_querystring=True)
     month, dates, status, status_reason = tree_controller.calculate_closures("mozilla-inbound")
 
     assert status == 'open'
