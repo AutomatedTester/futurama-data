@@ -16,7 +16,7 @@ def index():
     closure_months, closure_dates, status, status_reason = tree_controller.calculate_closures(tree)
     uptime = tree_controller.get_uptime_stats(closure_months)
     x, y = tree_controller.graph_data_for_uptime(closure_months)
-    checkin_needed_count = tree_controller.checkin_needed_count()
+    intermittent_count_last_week = tree_controller.intermittent_count_last_week()
 
 
     wek = datetime.datetime.now() - timedelta(7)
@@ -60,7 +60,7 @@ def index():
 
     return render_template("index.html", total={"x": x, "y": y}, backout_hours=backout_hours, pushes_hours=pushes_hours,
         backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
-        tree=tree, status={"status": status, "status_reason":status_reason}, uptime=uptime, checkin_needed_count=checkin_needed_count)
+        tree=tree, status={"status": status, "status_reason":status_reason}, uptime=uptime, intermittent_count_last_week=intermittent_count_last_week)
 
 
 

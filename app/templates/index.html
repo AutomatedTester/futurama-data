@@ -9,7 +9,7 @@
     <div class='yetAnotherContainer'>
         <div class='backouts floaty'><div class='omg'>{{ backouts['backouts'] }}</div><br> backouts were performed for {{ backouts['total'] }}     pushes since the beginning of {{ backouts['startdate'] }} (roughly the last 7 days). Merges are not counted</div>
         <div class='backouts floaty'><div class='omg'>{{ today['backouts'] }}</div><br> backouts were performed for {{ today['total'] }}     pushes since the beginning of today. Merges are not counted</div>
-        <div class='backouts floaty'><div class='omg'><a href='https://bugzilla.mozilla.org/buglist.cgi?order=Bug%20Number&resolution=---&resolution=FIXED&field0-0-0=keywords&type0-0-0=anywordssubstr&value0-0-0=checkin-needed&field0-0-1=status_whiteboard&type0-0-1=substring&value0-0-1=checkin-needed&field0-0-2=flagtypes.name&type0-0-2=equals&value0-0-2=checkin%3F&list_id=10978936'>{{ checkin_needed_count }}</a></div><br> checkin-needed currently</div>
+        <div class='backouts floaty'><div class='omg'>{{ intermittent_count_last_week }}</div><br> Intermittent Bugs Created In the last 7 days</div>
     </div>
     <div class='floaty wide' id="closuresContainer"></div>
     <div class='floaty wide' id="percentageUpTime"></div>

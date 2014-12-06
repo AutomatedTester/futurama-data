@@ -141,6 +141,20 @@ def calculate_closures(tree):
 
     return month, dates, status, status_reason
 
+def intermittent_count_last_week():
+    tday = datetime.date.today()
+    tday_minus_7 = tday - datetime.timedelta(days=7)
+    today = '%s-%s-%s' %(tday.year, tday.month if tday.month >= 10 else '0%s' % tday.month, tday.day)
+    seven_days_ago = '%s-%s-%s' %(tday_minus_7.year, tday_minus_7.month if tday_minus_7.month >= 10 else '0%s' % tday_minus_7.month, tday_minus_7.day)
+    bugzilla = bugsy.Bugsy()
+    bugs = bugzilla.search_for\
+                   .keywords("intermittent-failure")\
+                   .change_history_fields(['[Bug creation]'])\
+                   .timeframe(seven_days_ago, today)\
+                   .search()
+
+    return len(bugs)
+
 def checkin_needed_count():
     bugzilla = bugsy.Bugsy()
     bugs = bugzilla.search_for\
