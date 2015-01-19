@@ -10,7 +10,7 @@ To set up the environment do the following
 * Activate the virtual environment `source venv/bin/activate`
 * install dependencies `pip install -r requirements`
 * starting the development webserver `python run.py`
-** The url will be http://127.0.0.1:5000/
+  * The url will be http://127.0.0.1:5000/
 
 ### Testing
 
