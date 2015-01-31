@@ -102,9 +102,38 @@ def calculate_closures(tree):
     for item in reversed(results['logs']):
         if item['action'] == 'closed':
             if closed:
-                continue
-            closed = datetime.datetime.strptime(item['when'], "%Y-%m-%dT%H:%M:%S")
-            closed_reason = item['tags'][0] if len(item['tags']) > 0 else 'no reason'
+                # if closed the tag may have changed so let's pretend it was opened and then closed
+                import copy
+                opened = copy.copy(closed)
+                closed = datetime.datetime.strptime(item['when'], "%Y-%m-%dT%H:%M:%S")
+                closed_reason = item['tags'][0] if len(item['tags']) > 0 else 'no reason'
+
+                if closed.date().isoformat() in dates:
+                    try:
+                        dates[closed.date().isoformat()]['total'] = dates[closed.date().isoformat()]['total'] + delta
+                        dates[closed.date().isoformat()][closed_reason] = dates[closed.date().isoformat()][closed_reason] + delta
+                    except:
+                        dates[closed.date().isoformat()][closed_reason] = delta
+                else:
+                    dates[closed.date().isoformat()] = {'total': delta, closed_reason: delta}
+
+                year_month = "%s-%s" % (closed.date().year, closed.date().month if closed.date().month >= 10 else '0%s' % closed.date().month)
+
+                if year_month not in ['2012-06', '2012-07']:
+                    if year_month in month:
+                        month[year_month]['total'] = month[year_month]['total'] + delta
+                        try:
+                            month[year_month][closed_reason] = month[year_month][closed_reason] + delta
+                        except:
+                            month[year_month][closed_reason] = delta
+                    else:
+                        month[year_month] = {'total': delta, closed_reason: delta}
+
+                    total += delta
+            else:
+                closed = datetime.datetime.strptime(item['when'], "%Y-%m-%dT%H:%M:%S")
+                closed_reason = item['tags'][0] if len(item['tags']) > 0 else 'no reason'
+
         elif item['action'] == 'open' or item['action'] == 'approval require':
             if not closed:
                 continue
