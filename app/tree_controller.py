@@ -134,7 +134,7 @@ def calculate_closures(tree):
                 closed = datetime.datetime.strptime(item['when'], "%Y-%m-%dT%H:%M:%S")
                 closed_reason = item['tags'][0] if len(item['tags']) > 0 else 'no reason'
 
-        elif item['action'] == 'open' or item['action'] == 'approval require':
+        elif item['action'] == 'open' or item['action'] == 'approval required':
             if not closed:
                 continue
             opened = datetime.datetime.strptime(item['when'], "%Y-%m-%dT%H:%M:%S")
@@ -205,17 +205,17 @@ def checkin_needed_count():
                    .search()
 
     return len(bugs)
-    
+
 def backouts_list(tree, search_date):
     # Get the pushlog as a json blob
     pushlog = requests.get("https://hg.mozilla.org/%s/json-pushes?full=1&startdate=%s" %
         ("integration/%s" % tree if tree != "mozilla-central" else tree, search_date)).json()
 
     backed = 0
-    
+
     backouts_list = {}
     backouts_list = createBackoutList(backouts_list)
-    
+
     # Remove 'merge' changesets from the pushlog
     pushlog = purgeMerges(pushlog)
     backouts_list = getBackouts(backouts_list, pushlog)
@@ -223,96 +223,96 @@ def backouts_list(tree, search_date):
     return {"total": len(pushlog),
             "backouts_list": backouts_list,
             "startdate": search_date}
-            
+
 # Iterate through a pushlog and remove any 'merge' changesets
 def purgeMerges(aPushlog):
 	keys_to_pop = []
 	regex = re.compile('^.*[M,m]erge .* to .*')
-	
+
 	for p in aPushlog:
 		for c in range(len(aPushlog[p]['changesets'])):
 			if regex.match(aPushlog[p]['changesets'][c]['desc']):
 				keys_to_pop.append(p)
-	
+
 	for key in keys_to_pop:
 		aPushlog.pop(key, None)
-	
+
 	return aPushlog
 
 def createBackoutList(aBackouts):
-	# List of possible folders from hg.mozilla.org/mozilla-central 
+	# List of possible folders from hg.mozilla.org/mozilla-central
 	# [this should be dynamically generated in the future]
-	folders = ["accessibile", 
-			   "addon-sdk", 
-			   "b2g", 
-			   "browser", 
-			   "build", 
-			   "caps", 
-			   "chrome", 
-			   "config", 
-			   "content", 
-			   "db sqlite3", 
-			   "docshell", 
-			   "dom", 
+	folders = ["accessibile",
+			   "addon-sdk",
+			   "b2g",
+			   "browser",
+			   "build",
+			   "caps",
+			   "chrome",
+			   "config",
+			   "content",
+			   "db sqlite3",
+			   "docshell",
+			   "dom",
 			   "editor",
-               "embedding", 
-               "extensions", 
-               "gfx", 
-               "hal", 
-               "image", 
-               "intl", 
-               "ipc", 
-               "js", 
-               "layout", 
-               "media", 
-               "memory", 
-               "mfbt", 
-               "mobile", 
-               "modules", 
+               "embedding",
+               "extensions",
+               "gfx",
+               "hal",
+               "image",
+               "intl",
+               "ipc",
+               "js",
+               "layout",
+               "media",
+               "memory",
+               "mfbt",
+               "mobile",
+               "modules",
                "mozglue",
-               "netwerk", 
-               "nsprpub", 
-               "other-licenses", 
-               "parser", 
-               "probes", 
-               "profile", 
-               "python", 
-               "rdf", 
-               "security", 
-               "services", 
-               "startupcache", 
-               "storage", 
-               "testing", 
-               "toolkit", 
-               "tools", 
-               "uriloader", 
-               "view", 
-               "webapprt", 
-               "widget", 
-               "xpcom", 
-               "xpfe", 
+               "netwerk",
+               "nsprpub",
+               "other-licenses",
+               "parser",
+               "probes",
+               "profile",
+               "python",
+               "rdf",
+               "security",
+               "services",
+               "startupcache",
+               "storage",
+               "testing",
+               "toolkit",
+               "tools",
+               "uriloader",
+               "view",
+               "webapprt",
+               "widget",
+               "xpcom",
+               "xpfe",
                "xulrunner"]
 
 	for f in folders:
 		aBackouts[f] = 0
-			
+
 	return aBackouts
 
 def getBackouts(aBackouts, aPushlog):
 	regex = [re.compile('^.*[b,B]ackout.*'),
              re.compile('^.*[b,B]acked out.*'),
              re.compile('^.*[b,B]ack out.*')]
-             
+
 	for p in aPushlog: # p represents one push in the pushlog
 		for c in range(len(aPushlog[p]['changesets'])):
 			if (regex[0].match(aPushlog[p]['changesets'][c]['desc']) or
                 regex[1].match(aPushlog[p]['changesets'][c]['desc']) or
                 regex[2].match(aPushlog[p]['changesets'][c]['desc'])):
-				
+
 				aBackouts = countBackoutsByFolder(aBackouts, aPushlog[p]['changesets'][c])
-	
+
 	return aBackouts
-	
+
 def countBackoutsByFolder(aBackouts, aChangeset):
 	# Iterate through each file indicated in the backout
 	for f in range(len(aChangeset['files'])):
@@ -320,5 +320,5 @@ def countBackoutsByFolder(aBackouts, aChangeset):
 			regex = re.compile('^' + k + '.*')
 			if regex.match(aChangeset['files'][f]):
 				aBackouts[k] += 1
-		 
-	return aBackouts	
+
+	return aBackouts
