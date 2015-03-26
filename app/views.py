@@ -2,7 +2,7 @@ import datetime
 from datetime import timedelta
 import re
 
-from flask import Markup, render_template, request
+from flask import Markup, render_template, request, jsonify
 from app import app
 
 import tree_controller
@@ -15,8 +15,7 @@ def index():
     closure_months, closure_dates, status, status_reason = tree_controller.calculate_closures(tree)
     uptime = tree_controller.get_uptime_stats(closure_months)
     x, y = tree_controller.graph_data_for_uptime(closure_months)
-    intermittent_count_last_week = tree_controller.intermittent_opened_count_last_week()
-    intermittent_count_closed_last_week = tree_controller.intermittent_count_closed_last_week()
+
 
 
     wek = datetime.datetime.now() - timedelta(7)
@@ -60,8 +59,19 @@ def index():
 
     return render_template("index.html", total={"x": x, "y": y}, backout_hours=backout_hours, pushes_hours=pushes_hours,
         backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
-        tree=tree, status={"status": status, "status_reason":status_reason}, uptime=uptime, intermittent_count_last_week=intermittent_count_last_week,
-        intermittent_count_closed_last_week=intermittent_count_closed_last_week)
+        tree=tree, status={"status": status, "status_reason":status_reason}, uptime=uptime)
+
+@app.route('/intermittents')
+@app.route('/intermittents.html')
+def intermittents():
+    intermittent_count_last_week = tree_controller.intermittent_opened_count_last_week()
+    intermittent_count_closed_last_week = tree_controller.intermittent_count_closed_last_week()
+    intermittents_result = {
+            "intermittent_count_last_week":intermittent_count_last_week,
+            "intermittent_count_closed_last_week":intermittent_count_closed_last_week
+        }
+    return jsonify(intermittents_result)
+
 
 # Backouts Dashboard
 @app.route('/backouts.html')
@@ -70,7 +80,7 @@ def backouts():
 	period = request.args.get('w', 4)
 	now = datetime.datetime.now()
 	backouts_list = []
-	
+
 	for i in range(1,int(period)):
 		timespan = now - timedelta(i*7)
 		y = timespan.year
@@ -78,29 +88,29 @@ def backouts():
 		d = timespan.day if timespan.day > 9 else "0%s" % timespan.day
 		delta = "%s-%s-%s" % (y, m, d)
 		backouts_list.append(tree_controller.backouts_list(tree, delta))
-		
+
 	backout_markup = getBackoutMarkup(backouts_list, tree)
 	return render_template("backouts.html", backout_markup=backout_markup)
 
 def checkForBackouts(aPushlog):
     # total number of pushes in the log for today
-    today_pushes = 0 
-	
+    today_pushes = 0
+
     # Regular expressions to search for backouts
     regex_backouts = [re.compile('^.*[b,B]ackout.*'),
                       re.compile('^.*[b,B]acked out.*'),
 		      re.compile('^.*[b,B]ack out.*')]
-                      
+
     # List of backouts by folder
     backouts_by_folder = {}
-    
-    if aPushlog is not None: 
-	
+
+    if aPushlog is not None:
+
 	# Iterate through each of the pushes
 	for resp in aPushlog['pushes']:
 	    timestamp = int(aPushlog['pushes'][resp]['date'])
 	    pushDate = datetime.date.fromtimestamp(timestamp)
-	    	    
+
 	    # Check if the push is from today
 	    if (pushDate == datetime.date.today()):
 		today_pushes += 1
@@ -116,49 +126,49 @@ def checkForBackouts(aPushlog):
 
                         if (pushDate == datetime.date.today()):
                             backed += 1
-                            backouts_by_folder = countBackoutsByFolder(backouts_by_folder, changeset)  
-                        
+                            backouts_by_folder = countBackoutsByFolder(backouts_by_folder, changeset)
+
                             break
-    
-    return backouts_by_folder		
+
+    return backouts_by_folder
 
 def countBackoutsByFolder(backouts_by_folder, changeset):
     # List of possible folders from hg.mozilla.org/mozilla-central [this should be dynamically generated in the future]
     folders = ["accessibile", "addon-sdk", "b2g", "browser", "build", "caps", "chrome", "config", "content", "db sqlite3", "docshell", "dom", "editor",
                "embedding", "extensions", "gfx", "hal", "image", "intl", "ipc", "js", "layout", "media", "memory", "mfbt", "mobile", "modules", "mozglue",
-               "netwerk", "nsprpub", "other-licenses", "parser", "probes", "profile", "python", "rdf", "security", "services", "startupcache", "storage", 
+               "netwerk", "nsprpub", "other-licenses", "parser", "probes", "profile", "python", "rdf", "security", "services", "startupcache", "storage",
                "testing", "toolkit", "tools", "uriloader", "view", "webapprt", "widget", "xpcom", "xpfe", "xulrunner"]
-               	
+
     for fo in folders:
         backouts_by_folder[fo] = 0
 
         # Regular expression to search for file folder
         searchString = re.compile('^' + fo + '.*')
-			  
+
         # Iterate through each file indicated in the backout
         for f in range(len(changeset['files'])):
-		
+
             # Check if the folder is found in the file path
             if (searchString.match(changeset['files'][f])):
-				
+
                 # Increase the backout count for that folder
                 backouts_by_folder[fo] += 1
-                
+
     return backouts_by_folder
-	
+
 def getBackoutMarkup(aBackoutsList, aTree):
 
 	html = "<table style='border:1px solid #000000; font-family:Arial'>"
-	
+
 	# Table Headings
 	html += "<tr>"
 	html += "<th>&nbsp;</th>"
 	for b in aBackoutsList:
 		html += "<th>" + b['startdate'] + "</th>"
 	html += "</tr>"
-	
+
 	components = aBackoutsList[0]['backouts_list'].keys()
-	
+
 	i = 0
 	for c in sorted(components):
 		if ((i%2) == 0):
@@ -170,10 +180,10 @@ def getBackoutMarkup(aBackoutsList, aTree):
 			for k, v in sorted(b['backouts_list'].iteritems()):
 				if (c == k):
 					html += "<td>" + str(v) + "</td>"
-			
+
 		html += "</tr>"
 		i += 1
-	
+
 	html += "</table>"
-    
+
 	return Markup(html)
