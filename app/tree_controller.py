@@ -107,7 +107,8 @@ def calculate_closures(tree):
                 opened = copy.copy(closed)
                 closed = datetime.datetime.strptime(item['when'], "%Y-%m-%dT%H:%M:%S")
                 closed_reason = item['tags'][0] if len(item['tags']) > 0 else 'no reason'
-
+                delta = closed - opened
+                
                 if closed.date().isoformat() in dates:
                     try:
                         dates[closed.date().isoformat()]['total'] = dates[closed.date().isoformat()]['total'] + delta
@@ -130,6 +131,8 @@ def calculate_closures(tree):
                         month[year_month] = {'total': delta, closed_reason: delta}
 
                     total += delta
+
+                opened = None
             else:
                 closed = datetime.datetime.strptime(item['when'], "%Y-%m-%dT%H:%M:%S")
                 closed_reason = item['tags'][0] if len(item['tags']) > 0 else 'no reason'
@@ -167,7 +170,7 @@ def calculate_closures(tree):
             closed_reason = None
         elif item['action'] == 'added':
             Added = item['when']
-
+    print ("Total is %s" % total)
     return month, dates, status, status_reason
 
 def intermittent_opened_count_last_week():
