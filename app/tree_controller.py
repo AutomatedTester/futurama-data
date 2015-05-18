@@ -47,7 +47,7 @@ def backouts(tree, search_date):
     if tree.startswith('comm-'):
         return None
     total_pushes = requests.get("https://hg.mozilla.org/%s/json-pushes?full=1&startdate=%s" %
-        ("integration/%s" % tree if tree != "mozilla-central" else tree, search_date)).json()
+        ("integration/%s" % tree if tree != "mozilla-central" else tree, search_date), verify=True).json()
     backed = 0
     backoutln = re.compile('^.*[b,B]ackout.*')
     backoutln2 = re.compile('^.*[b,B]acked out.*')
@@ -108,7 +108,7 @@ def calculate_closures(tree):
                 closed = datetime.datetime.strptime(item['when'], "%Y-%m-%dT%H:%M:%S")
                 closed_reason = item['tags'][0] if len(item['tags']) > 0 else 'no reason'
                 delta = closed - opened
-                
+
                 if closed.date().isoformat() in dates:
                     try:
                         dates[closed.date().isoformat()]['total'] = dates[closed.date().isoformat()]['total'] + delta
@@ -185,6 +185,9 @@ def intermittent_opened_count_last_week():
                    .timeframe(seven_days_ago, today)\
                    .search()
 
+    for bug in bugs:
+        if bug.product == 'Thunderbird':
+            bugs.remove(bug)
     return len(bugs)
 
 def intermittent_count_closed_last_week():
@@ -198,6 +201,10 @@ def intermittent_count_closed_last_week():
                    .change_history_fields(['bug_status'], 'Resolved')\
                    .timeframe(seven_days_ago, today)\
                    .search()
+
+    for bug in bugs:
+        if bug.product == 'Thunderbird':
+            bugs.remove(bug)
 
     return len(bugs)
 
