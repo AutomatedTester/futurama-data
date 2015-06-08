@@ -109,14 +109,7 @@ def calculate_closures(tree):
                 closed_reason = item['tags'][0] if len(item['tags']) > 0 else 'no reason'
                 delta = closed - opened
 
-                if closed.date().isoformat() in dates:
-                    try:
-                        dates[closed.date().isoformat()]['total'] = dates[closed.date().isoformat()]['total'] + delta
-                        dates[closed.date().isoformat()][closed_reason] = dates[closed.date().isoformat()][closed_reason] + delta
-                    except:
-                        dates[closed.date().isoformat()][closed_reason] = delta
-                else:
-                    dates[closed.date().isoformat()] = {'total': delta, closed_reason: delta}
+                dates = update_dates(closed, closed_reason, dates)
 
                 year_month = "%s-%s" % (closed.date().year, closed.date().month if closed.date().month >= 10 else '0%s' % closed.date().month)
 
@@ -143,14 +136,8 @@ def calculate_closures(tree):
             opened = datetime.datetime.strptime(item['when'], "%Y-%m-%dT%H:%M:%S")
             delta = opened - closed
 
-            if closed.date().isoformat() in dates:
-                try:
-                    dates[closed.date().isoformat()]['total'] = dates[closed.date().isoformat()]['total'] + delta
-                    dates[closed.date().isoformat()][closed_reason] = dates[closed.date().isoformat()][closed_reason] + delta
-                except:
-                    dates[closed.date().isoformat()][closed_reason] = delta
-            else:
-                dates[closed.date().isoformat()] = {'total': delta, closed_reason: delta}
+
+            dates = update_dates(closed, closed_reason, dates)
 
             year_month = "%s-%s" % (closed.date().year, closed.date().month if closed.date().month >= 10 else '0%s' % closed.date().month)
 
@@ -172,6 +159,19 @@ def calculate_closures(tree):
             Added = item['when']
     print ("Total is %s" % total)
     return month, dates, status, status_reason
+
+def update_dates(closed_date, closed_reason, dates):
+    delta = datetime.timedelta(0)
+    if closed_date.date().isoformat() in dates:
+        try:
+            dates[closed_date.date().isoformat()]['total'] = dates[closed_date.date().isoformat()]['total'] + delta
+            dates[closed_date.date().isoformat()][closed_reason] = dates[closed_date.date().isoformat()][closed_reason] + delta
+        except:
+            dates[closed_date.date().isoformat()][closed_reason] = delta
+    else:
+        dates[closed_date.date().isoformat()] = {'total': delta, closed_reason: delta}
+    return dates
+
 
 def intermittent_opened_count_last_week():
     tday = datetime.date.today()
