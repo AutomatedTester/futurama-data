@@ -113,17 +113,7 @@ def calculate_closures(tree):
 
                 year_month = "%s-%s" % (closed.date().year, closed.date().month if closed.date().month >= 10 else '0%s' % closed.date().month)
 
-                if year_month not in ['2012-06', '2012-07']:
-                    if year_month in month:
-                        month[year_month]['total'] = month[year_month]['total'] + delta
-                        try:
-                            month[year_month][closed_reason] = month[year_month][closed_reason] + delta
-                        except:
-                            month[year_month][closed_reason] = delta
-                    else:
-                        month[year_month] = {'total': delta, closed_reason: delta}
-
-                    total += delta
+                month, delta = populate_month(year_month, month, delta, closed_reason, total)
 
                 opened = None
             else:
@@ -141,17 +131,7 @@ def calculate_closures(tree):
 
             year_month = "%s-%s" % (closed.date().year, closed.date().month if closed.date().month >= 10 else '0%s' % closed.date().month)
 
-            if year_month not in ['2012-06', '2012-07']:
-                if year_month in month:
-                    month[year_month]['total'] = month[year_month]['total'] + delta
-                    try:
-                        month[year_month][closed_reason] = month[year_month][closed_reason] + delta
-                    except:
-                        month[year_month][closed_reason] = delta
-                else:
-                    month[year_month] = {'total': delta, closed_reason: delta}
-
-                total += delta
+            month, delta = populate_month(year_month, month, delta, closed_reason, total)
 
             closed = None
             closed_reason = None
@@ -159,6 +139,21 @@ def calculate_closures(tree):
             Added = item['when']
     print ("Total is %s" % total)
     return month, dates, status, status_reason
+
+def populate_month(year_month, month, delta, closed_reason, total):
+    if year_month not in ['2012-06', '2012-07']:
+        if year_month in month:
+            month[year_month]['total'] = month[year_month]['total'] + delta
+            try:
+                month[year_month][closed_reason] = month[year_month][closed_reason] + delta
+            except:
+                month[year_month][closed_reason] = delta
+        else:
+            month[year_month] = {'total': delta, closed_reason: delta}
+
+        total += delta
+
+    return month, delta
 
 def update_dates(closed_date, closed_reason, dates):
     delta = datetime.timedelta(0)
