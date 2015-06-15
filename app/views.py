@@ -7,6 +7,11 @@ from app import app
 
 import tree_controller
 
+@app.route("/favicon.ico")
+def favicon():
+    return app.send_static_file("favicon.ico")
+
+
 @app.route('/')
 @app.route('/index')
 @app.route('/index.html')
