@@ -71,9 +71,11 @@ def index():
 def intermittents():
     intermittent_count_last_week = tree_controller.intermittent_opened_count_last_week()
     intermittent_count_closed_last_week = tree_controller.intermittent_count_closed_last_week()
+    intermittents_closed_breakdown = tree_controller.intermittents_closed_breakdown()
     intermittents_result = {
             "intermittent_count_last_week":intermittent_count_last_week,
-            "intermittent_count_closed_last_week":intermittent_count_closed_last_week
+            "intermittent_count_closed_last_week":intermittent_count_closed_last_week,
+            "closed_break_down": intermittents_closed_breakdown,
         }
     return jsonify(intermittents_result)
 

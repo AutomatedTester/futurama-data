@@ -28,6 +28,9 @@
     </div>
 
   </div>
+  <div id='closedBreakdown' style="display:None">
+
+  </div>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
   <script src="http://code.highcharts.com/highcharts.js"></script>
   <script type="text/javascript">
@@ -192,6 +195,11 @@
       var intermittents = JSON.parse(oReq.response);
       document.getElementById('intermittentsClosedWeek').textContent = intermittents.intermittent_count_closed_last_week;
       document.getElementById('intermittentsOpenWeek').textContent = intermittents.intermittent_count_last_week;
+      var closureReason = ""
+      for (var reason in intermittents.closed_break_down) {
+        closureReason = closureReason + reason + " " + intermittents.closed_break_down[reason] + "<br>"
+      }
+      document.getElementById('closedBreakdown').innerHTML = closureReason;
     }
     oReq.open("GET",'/intermittents.html', true);
     oReq.send();

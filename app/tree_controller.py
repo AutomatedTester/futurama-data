@@ -201,6 +201,23 @@ def _seven_days_ago():
 
     return seven_days_ago, today
 
+def intermittents_closed_breakdown():
+
+    seven_days_ago, today = _seven_days_ago()
+
+    bugs = _intermittent_bugs(seven_days_ago, today)
+
+    result= {}
+    for bug in bugs:
+        if bug.resolution == '':
+            bug.resolution = 'Reopened'
+        try:
+            result[bug.resolution] = result[bug.resolution] + 1
+        except:
+            result[bug.resolution] = 1
+
+    return result
+
 def intermittent_count_closed_last_week():
 
     seven_days_ago, today = _seven_days_ago()
