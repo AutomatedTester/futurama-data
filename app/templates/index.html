@@ -8,27 +8,28 @@
   <div class='main'>
     <div class='main'>Below are the details for <span class='boldy'>{{ tree }}</span></div>
     <div class='yetAnotherContainer'>
-        <div class='backouts floaty'><div class='omg'>{{ backouts['backouts'] }}</div><br> backouts were performed for {{ backouts['total'] }}     pushes since the beginning of {{ backouts['startdate'] }} (roughly the last 7 days). Merges are not counted</div>
-        <div class='backouts floaty'><div class='omg'>{{ today['backouts'] }}</div><br> backouts were performed for {{ today['total'] }}     pushes since the beginning of today. Merges are not counted</div>
-        <div class='backouts floaty'><div class='omg' id='intermittentsOpenWeek'>...</div><br> Intermittent Bugs Created In the last 7 days</div>
-        <div class='backouts floaty'><div class='omg' id='intermittentsClosedWeek'>...</div><br> Intermittent Bugs Closed In the last 7 days</div>
+        <div class='backouts rightFloaty'><div class='omg'>{{ backouts['backouts'] }}</div><br> backouts were performed for {{ backouts['total'] }}     pushes since the beginning of {{ backouts['startdate'] }} (roughly the last 7 days). Merges are not counted</div>
+        <div class='backouts rightFloaty'><div class='omg'>{{ today['backouts'] }}</div><br> backouts were performed for {{ today['total'] }}     pushes since the beginning of today. Merges are not counted</div>
+        <div class='backouts rightFloaty'><div class='omg' id='intermittentsOpenWeek'>...</div><br> Intermittent Bugs Created In the last 7 days</div>
+        <div class='backouts leftFloaty'><div class='omg' id='intermittentsClosedWeek'>...</div><br> Intermittent Bugs Closed In the last 7 days</div>
+        <div class='backouts leftFloaty'><div id='closedBreakdown' class='hidden'></div></div>
     </div>
-    <div class='floaty wide' id="closuresContainer"></div>
-    <div class='floaty wide' id="percentageUpTime"></div>
-    <div class='floaty wide' id="backoutPerHourContainer"></div>
-    <div class='floaty wide' id="landingsPerHourContainer"></div>
+    <div class='rightFloaty wide' id="closuresContainer"></div>
+    <div class='rightFloaty wide' id="percentageUpTime"></div>
+    <div class='rightFloaty wide' id="backoutPerHourContainer"></div>
+    <div class='rightFloaty wide' id="landingsPerHourContainer"></div>
 
 
     <div class='floatingtree'><a href="/?tree=mozilla-inbound">Mozilla-Inbound</a> | <a href="/?tree=mozilla-central">Mozilla-Central</a> |
          <a href="/?tree=fx-team">FX-Team</a></div>
-    <div>Tree is currently: <span><a href='https://treestatus.mozilla.org/{{ tree }}'>{{ status['status'] }}</a></span>
+    <div class='leftFloaty'>Tree is currently: <span><a href='https://treestatus.mozilla.org/{{ tree }}'>{{ status['status'] }}</a></span>
     {% if status['status_reason'] %}
     <span>Tree is closed for reason: {{ status['status_reason'] }}</span>
     {% endif %}
     </div>
 
   </div>
-  <div id='closedBreakdown' style="display:None">
+
 
   </div>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
@@ -203,5 +204,18 @@
     }
     oReq.open("GET",'/intermittents.html', true);
     oReq.send();
+
+    var intermittentsClosedWeek = document.getElementById('intermittentsClosedWeek');
+    intermittentsClosedWeek.addEventListener('mouseover', function(){
+      var closedBreakdown = document.getElementById('closedBreakdown');
+      closedBreakdown.classList.remove('hidden');
+      closedBreakdown.classList.add('show');
+    });
+
+    intermittentsClosedWeek.addEventListener('mouseout', function () {
+      var closedBreakdown = document.getElementById('closedBreakdown');
+      closedBreakdown.classList.remove('show');
+      closedBreakdown.classList.add('hidden');
+    })
   </script>
 </body>

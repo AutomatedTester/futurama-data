@@ -15,9 +15,14 @@
     font-size: 120px;
 }
 
-.floaty {
-    float: left;
+.rightFloaty {
+    float: right;
 }
+
+.leftFloaty {
+  float:left;
+}
+
 .wide {
     width: 1000px;
 }
@@ -45,4 +50,12 @@
     height: 400px;
     margin: 0 auto;
     float: left;
+}
+
+.hidden {
+  display:none;
+}
+
+.show {
+  display:block;
 }
