@@ -193,11 +193,17 @@ def _intermittent_bugs(seven_days_ago, today):
                    .timeframe(seven_days_ago, today)\
                    .search()
 
-def intermittent_count_closed_last_week():
+def _seven_days_ago():
     tday = datetime.date.today()
     tday_minus_7 = tday - datetime.timedelta(days=7)
     today = '%s-%s-%s' %(tday.year, tday.month if tday.month >= 10 else '0%s' % tday.month, tday.day)
     seven_days_ago = '%s-%s-%s' %(tday_minus_7.year, tday_minus_7.month if tday_minus_7.month >= 10 else '0%s' % tday_minus_7.month, tday_minus_7.day)
+
+    return seven_days_ago, today
+
+def intermittent_count_closed_last_week():
+
+    seven_days_ago, today = _seven_days_ago()
 
     bugs = _intermittent_bugs(seven_days_ago, today)
 
