@@ -229,7 +229,7 @@ def intermittent_count_closed_last_week():
     bugs = _intermittent_bugs(seven_days_ago, today)
 
     for bug in bugs:
-        if bug.product == 'Thunderbird':
+        if bug.product == 'Thunderbird' or bug.resolution == '':
             bugs.remove(bug)
 
     return len(bugs)
