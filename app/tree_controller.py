@@ -209,12 +209,16 @@ def intermittents_closed_breakdown():
 
     result= {}
     for bug in bugs:
+        reason = ''
         if bug.resolution == '':
-            bug.resolution = 'Reopened'
+            reason = 'REOPENED'
+        else:
+            reason = bug.resolution
+
         try:
-            result[bug.resolution] = result[bug.resolution] + 1
+            result[reason] = result[bug.resolution] + 1
         except:
-            result[bug.resolution] = 1
+            result[reason] = 1
 
     return result
 
