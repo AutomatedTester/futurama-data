@@ -88,7 +88,7 @@ def backouts(tree, search_date):
             "pushesHours": pushes_hours}
 
 def calculate_closures(tree):
-    response = requests.get('https://treestatus.mozilla.org/%s/logs?format=json&all=1' % tree, verify=False)
+    response = requests.get('https://api.pub.build.mozilla.org/treestatus/trees/%s/logs?all=1' % tree, verify=False)
     results = response.json()
     delta = datetime.timedelta(0)
     closed = None
@@ -97,15 +97,15 @@ def calculate_closures(tree):
     month = {}
     total = datetime.timedelta(0)
     Added = None
-    status = results['logs'][0]['action']
-    status_reason = results['logs'][0]['reason']
-    for item in reversed(results['logs']):
-        if item['action'] == 'closed':
+    status = results['result'][0]['status']
+    status_reason = results['result'][0]['reason']
+    for item in sorted(results['result'], key=lambda l: l['when']):
+        if item['status'] == 'closed':
             if closed:
                 # if closed the tag may have changed so let's pretend it was opened and then closed
                 import copy
                 opened = copy.copy(closed)
-                closed = datetime.datetime.strptime(item['when'], "%Y-%m-%dT%H:%M:%S")
+                closed = datetime.datetime.strptime(item['when'][:19], "%Y-%m-%dT%H:%M:%S")
                 closed_reason = item['tags'][0] if len(item['tags']) > 0 else 'no reason'
                 delta = closed - opened
 
@@ -117,13 +117,13 @@ def calculate_closures(tree):
 
                 opened = None
             else:
-                closed = datetime.datetime.strptime(item['when'], "%Y-%m-%dT%H:%M:%S")
+                closed = datetime.datetime.strptime(item['when'][:19], "%Y-%m-%dT%H:%M:%S")
                 closed_reason = item['tags'][0] if len(item['tags']) > 0 else 'no reason'
 
-        elif item['action'] == 'open' or item['action'] == 'approval required':
+        elif item['status'] == 'open' or item['status'] == 'approval required':
             if not closed:
                 continue
-            opened = datetime.datetime.strptime(item['when'], "%Y-%m-%dT%H:%M:%S")
+            opened = datetime.datetime.strptime(item['when'][:19], "%Y-%m-%dT%H:%M:%S")
             delta = opened - closed
 
 
@@ -135,7 +135,7 @@ def calculate_closures(tree):
 
             closed = None
             closed_reason = None
-        elif item['action'] == 'added':
+        elif item['status'] == 'added':
             Added = item['when']
     print ("Total is %s" % total)
     return month, dates, status, status_reason
