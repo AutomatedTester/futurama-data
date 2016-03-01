@@ -16,7 +16,7 @@
     </div>
     <div class='rightFloaty wide' id="closuresContainer"></div>
     <div class='rightFloaty wide' id="percentageUpTime"></div>
-    <iframe class='rightFloaty wide' src="treebackouts.html" width="" height=""></iframe>
+    <iframe id=backoutsFrame class='rightFloaty wide' src=""></iframe>
 
 
     <div class='floatingtree'><a href="/?tree=mozilla-inbound">Mozilla-Inbound</a> | <a href="/?tree=mozilla-central">Mozilla-Central</a> |
@@ -93,6 +93,11 @@
             },
           }
       });
+      var queryDict = {}
+        location.search.substr(1).split("&").forEach(function(item) {
+          queryDict[item.split("=")[0]] = item.split("=")[1]
+      })
+      $("#backoutsFrame").attr("src", "treebackouts.html?tree=" + queryDict.tree);
   });
   </script>
   <script type="text/javascript">
