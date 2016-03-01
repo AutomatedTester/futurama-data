@@ -37,6 +37,17 @@ def index():
         backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
         tree=tree, status={"status": status, "status_reason":status_reason}, uptime=uptime)
 
+@app.route('/treebackouts.html')
+@app.route('/treebackouts')
+def treebackouts():
+    tree = request.args.get('tree', 'mozilla-inbound')
+    wek = datetime.datetime.now() - timedelta(7)
+    week = "%s-%s-%s" % (wek.year,
+        wek.month if wek.month > 9 else "0%s" % wek.month,
+        wek.day if wek.day > 9 else "0%s" % wek.day)
+    backed, today_pushes, backout_hours, pushes_hours, backouts_since_week = renderbackouts(tree, week)
+    return render_template("treebackouts.html", backouts=backouts_since_week, backout_hours=backout_hours, pushes_hours=pushes_hours)
+
 def renderbackouts(tree, week):
 
     backouts_since_week = tree_controller.backouts(tree, week)
