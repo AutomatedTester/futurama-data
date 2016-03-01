@@ -33,7 +33,7 @@ def index():
         tody.month if tody.month > 9 else "0%s" % tody.month,
         tody.day if tody.day > 9 else "0%s" % tody.day)
 
-    return render_template("index.html", total={"x": x, "y": y}, backout_hours=backout_hours, pushes_hours=pushes_hours,
+    return render_template("index.html", total={"x": x, "y": y},
         backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
         tree=tree, status={"status": status, "status_reason":status_reason}, uptime=uptime)
 

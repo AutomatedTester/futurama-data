@@ -16,8 +16,7 @@
     </div>
     <div class='rightFloaty wide' id="closuresContainer"></div>
     <div class='rightFloaty wide' id="percentageUpTime"></div>
-    <div class='rightFloaty wide' id="backoutPerHourContainer"></div>
-    <div class='rightFloaty wide' id="landingsPerHourContainer"></div>
+    <iframe class='rightFloaty wide' src="treebackouts.html" width="" height=""></iframe>
 
 
     <div class='floatingtree'><a href="/?tree=mozilla-inbound">Mozilla-Inbound</a> | <a href="/?tree=mozilla-central">Mozilla-Central</a> |
@@ -94,97 +93,6 @@
             },
           }
       });
-
-      $('#backoutPerHourContainer').highcharts({
-          chart: {
-              defaultSeriesType: 'column'
-          },
-          title: {
-              text: 'Backouts and Landings Per Hour for today'
-          },
-          xAxis: {
-            title: {
-              text: "Hours (Pacific)",
-            },
-            categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-                         16, 17, 18, 19, 20, 21, 22, 23]
-          },
-          yAxis: {
-            title: {
-              text: "pushes per hour",
-            },
-          },
-          series: [{
-            name: "backouts",
-            data: [{% for value in backout_hours %}
-                          {{ value}},
-                         {% endfor %}],
-            color: '#434348'
-            },
-            {
-              name: "pushes",
-              data: [{% for value in pushes_hours %}
-                            {{ value}},
-                           {% endfor %}],
-              color: "#7CB5EC"
-          }],
-          plotOptions: {
-          },
-          legend: {
-            layout: 'horizontal',
-            floating: true,
-            backgroundColor: '#FFFFFF',
-            align: 'right',
-            verticalAlign: 'top',
-            y: 60,
-            x: -60
-          },
-      });
-    $('#landingsPerHourContainer').highcharts({
-        chart: {
-            defaultSeriesType: 'column'
-        },
-        title: {
-            text: 'Backouts and landings aggregated to the hour for the week'
-        },
-        xAxis: {
-          title: {
-            text: "Hours (Pacific)",
-          },
-          categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-                       16, 17, 18, 19, 20, 21, 22, 23]
-        },
-        yAxis: {
-          title: {
-            text: "pushes per hour",
-          },
-        },
-        series: [{
-          name: "Pushes",
-          data: [{% for value in backouts["pushesHours"] %}
-                        {{ value}},
-                       {% endfor %}],
-          color: '#7CB5EC'
-          },
-          {
-            name: "Backouts",
-            data: [{% for value in backouts["backoutHours"] %}
-                          {{ value}},
-                         {% endfor %}],
-            color: "#434348"
-        }],
-        plotOptions: {
-        },
-        legend: {
-          layout: 'horizontal',
-          floating: true,
-          backgroundColor: '#FFFFFF',
-          align: 'right',
-          verticalAlign: 'top',
-          y: 60,
-          x: -60
-        },
-    });
   });
   </script>
   <script type="text/javascript">
