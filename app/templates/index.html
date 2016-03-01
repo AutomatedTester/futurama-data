@@ -32,12 +32,16 @@
   <script src="https://code.highcharts.com/highcharts.js"></script>
   <script type="text/javascript">
   $(function () {
+      var queryDict = {}
+        location.search.substr(1).split("&").forEach(function(item) {
+          queryDict[item.split("=")[0]] = item.split("=")[1]
+      });
       $('#closuresContainer').highcharts({
           chart: {
               type: 'area'
           },
           title: {
-              text: 'closures'
+              text: 'closures for ' + (queryDict.tree ? queryDict.tree : "mozilla-inbound")
           },
           xAxis: {
             categories: {{ total["x"]|safe }},
@@ -71,7 +75,7 @@
               type: 'line'
           },
           title: {
-              text: 'Tree Uptime'
+              text: 'Tree Uptime for ' + (queryDict.tree ? queryDict.tree : "mozilla-inbound")
           },
           xAxis: {
             categories: {{ total["x"]|safe }},
@@ -93,10 +97,7 @@
             },
           }
       });
-      var queryDict = {}
-        location.search.substr(1).split("&").forEach(function(item) {
-          queryDict[item.split("=")[0]] = item.split("=")[1]
-      })
+
       $("#backoutsFrame").attr("src", "treebackouts.html?tree=" + queryDict.tree);
   });
   </script>

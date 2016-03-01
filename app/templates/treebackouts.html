@@ -9,12 +9,16 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script type="text/javascript">
   $(function () {
+    var queryDict = {}
+      location.search.substr(1).split("&").forEach(function(item) {
+        queryDict[item.split("=")[0]] = item.split("=")[1]
+    });
     $('#backoutPerHourContainer').highcharts({
         chart: {
             defaultSeriesType: 'column'
         },
         title: {
-            text: 'Backouts and Landings Per Hour for today'
+            text: 'Backouts and Landings Per Hour for today for '  + (queryDict.tree ? queryDict.tree : "mozilla-inbound")
         },
         xAxis: {
           title: {
@@ -59,7 +63,7 @@
           defaultSeriesType: 'column'
       },
       title: {
-          text: 'Backouts and landings aggregated to the hour for the week'
+          text: 'Backouts and landings aggregated to the hour for the week for ' + (queryDict.tree ? queryDict.tree : "mozilla-inbound")
       },
       xAxis: {
         title: {
