@@ -21,15 +21,25 @@ def index():
     uptime = tree_controller.get_uptime_stats(closure_months)
     x, y = tree_controller.graph_data_for_uptime(closure_months)
 
-
-
     wek = datetime.datetime.now() - timedelta(7)
     week = "%s-%s-%s" % (wek.year,
         wek.month if wek.month > 9 else "0%s" % wek.month,
         wek.day if wek.day > 9 else "0%s" % wek.day)
 
-    backouts_since_week = tree_controller.backouts(tree, week)
+    backed, today_pushes, backout_hours, pushes_hours, backouts_since_week = renderbackouts(tree, week)
     tody = datetime.datetime.now()
+
+    today = "%s-%s-%s" % (tody.year,
+        tody.month if tody.month > 9 else "0%s" % tody.month,
+        tody.day if tody.day > 9 else "0%s" % tody.day)
+
+    return render_template("index.html", total={"x": x, "y": y}, backout_hours=backout_hours, pushes_hours=pushes_hours,
+        backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
+        tree=tree, status={"status": status, "status_reason":status_reason}, uptime=uptime)
+
+def renderbackouts(tree, week):
+
+    backouts_since_week = tree_controller.backouts(tree, week)
 
     backed = 0
     today_pushes = 0
@@ -58,13 +68,7 @@ def index():
                             backout_hours[bhour] = backout_hours[bhour] + 1
                             break
 
-    today = "%s-%s-%s" % (tody.year,
-        tody.month if tody.month > 9 else "0%s" % tody.month,
-        tody.day if tody.day > 9 else "0%s" % tody.day)
-
-    return render_template("index.html", total={"x": x, "y": y}, backout_hours=backout_hours, pushes_hours=pushes_hours,
-        backouts=backouts_since_week, today={"total": today_pushes, "backouts": backed, "search_date": today},
-        tree=tree, status={"status": status, "status_reason":status_reason}, uptime=uptime)
+    return backed, today_pushes, backout_hours, pushes_hours, backouts_since_week
 
 @app.route('/intermittents')
 @app.route('/intermittents.html')
