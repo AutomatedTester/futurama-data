@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <link rel="stylesheet" type="text/css" href="/static/stylesheets/main.css">
 <link rel="shortcut icon" href="{{ url_for('.static',filename='favicon.ico') }}" />
-<div class=main>
+<div class="">
   <div class='wide' id="backoutPerHourContainer"></div>
   <div class='wide' id="landingsPerHourContainer"></div>
 </div>
@@ -15,7 +15,9 @@
     });
     $('#backoutPerHourContainer').highcharts({
         chart: {
-            defaultSeriesType: 'column'
+            defaultSeriesType: 'column',
+            width: document.documentElement.clientWidth,
+            height: Math.floor(document.documentElement.clientHeight/2),
         },
         title: {
             text: 'Backouts and Landings Per Hour for today for '  + (queryDict.tree ? queryDict.tree : "mozilla-inbound")
@@ -60,7 +62,9 @@
     });
     $('#landingsPerHourContainer').highcharts({
       chart: {
-          defaultSeriesType: 'column'
+          defaultSeriesType: 'column',
+          width: document.documentElement.clientWidth,
+          height: Math.floor(document.documentElement.clientHeight/2),
       },
       title: {
           text: 'Backouts and landings aggregated to the hour for the week for ' + (queryDict.tree ? queryDict.tree : "mozilla-inbound")

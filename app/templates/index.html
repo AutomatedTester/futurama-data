@@ -98,7 +98,7 @@
           }
       });
 
-      $("#backoutsFrame").attr("src", "treebackouts.html?tree=" + queryDict.tree);
+      $("#backoutsFrame").attr("src", "treebackouts.html?tree=" + (queryDict.tree ? queryDict.tree : "mozilla-inbound"));
   });
   </script>
   <script type="text/javascript">
