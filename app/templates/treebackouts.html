@@ -16,11 +16,11 @@
     $('#backoutPerHourContainer').highcharts({
         chart: {
             defaultSeriesType: 'column',
-            width: document.documentElement.clientWidth,
+            width: document.documentElement.clientWidth - 30,
             height: Math.floor(document.documentElement.clientHeight/2),
         },
         title: {
-            text: 'Backouts and Landings Per Hour for today for '  + (queryDict.tree ? queryDict.tree : "mozilla-inbound")
+            text: 'Backouts and Landings per hour for today for '  + (queryDict.tree ? queryDict.tree : "mozilla-inbound")
         },
         xAxis: {
           title: {
@@ -35,20 +35,23 @@
           },
         },
         series: [{
-          name: "backouts",
-          data: [{% for value in backout_hours %}
-                        {{ value}},
-                       {% endfor %}],
-          color: '#434348'
-          },
-          {
-            name: "pushes",
+            name: "Pushes",
             data: [{% for value in pushes_hours %}
                           {{ value}},
                          {% endfor %}],
             color: "#7CB5EC"
-        }],
+        },
+        {
+          name: "Backouts",
+          data: [{% for value in backout_hours %}
+                        {{ value}},
+                       {% endfor %}],
+          color: '#434348'
+          }],
         plotOptions: {
+          series: {
+                stacking: 'normal'
+            }
         },
         legend: {
           layout: 'horizontal',
@@ -63,11 +66,11 @@
     $('#landingsPerHourContainer').highcharts({
       chart: {
           defaultSeriesType: 'column',
-          width: document.documentElement.clientWidth,
+          width: document.documentElement.clientWidth - 30,
           height: Math.floor(document.documentElement.clientHeight/2),
       },
       title: {
-          text: 'Backouts and landings aggregated to the hour for the week for ' + (queryDict.tree ? queryDict.tree : "mozilla-inbound")
+          text: 'Backouts and Landings aggregated to the hour for the week for ' + (queryDict.tree ? queryDict.tree : "mozilla-inbound")
       },
       xAxis: {
         title: {
@@ -96,6 +99,9 @@
           color: "#434348"
       }],
       plotOptions: {
+        series: {
+              stacking: 'normal'
+          }
       },
       legend: {
         layout: 'horizontal',
