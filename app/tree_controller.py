@@ -78,7 +78,7 @@ def backouts(tree, search_date):
                 # Lets also track what hour the backouts happened in
                 bhour = datetime.datetime.fromtimestamp(int(total_pushes[resp]['date'])).hour
                 backout_hours[bhour] = backout_hours[bhour] + 1
-                pushes_hours[bhour] =- 1
+                pushes_hours[bhour] = pushes_hours[bhour] - 1
                 break
 
     return {"total": len(total_pushes),
