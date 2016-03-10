@@ -71,18 +71,17 @@
           height: Math.floor(document.documentElement.clientHeight/2),
       },
       title: {
-          text: 'Backouts and Landings aggregated to the hour for the week for ' + (queryDict.tree ? queryDict.tree : "mozilla-inbound")
+          text: 'Backouts and Landings aggregated to the day for the last week for ' + (queryDict.tree ? queryDict.tree : "mozilla-inbound")
       },
       xAxis: {
         title: {
           text: "Hours (Pacific)",
         },
-        categories: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-                     16, 17, 18, 19, 20, 21, 22, 23]
+        categories: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
       },
       yAxis: {
         title: {
-          text: "pushes per hour",
+          text: "pushes per day",
         },
       },
       series: [{

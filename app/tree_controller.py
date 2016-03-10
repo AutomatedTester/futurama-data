@@ -62,12 +62,12 @@ def backouts(tree, search_date):
     for key in keys_to_pop:
         total_pushes.pop(key, None)
 
-    backout_hours = [0] * 24
-    pushes_hours = [0] * 24
+    backout_hours = [0] * 7
+    pushes_hours = [0] * 7
 
     for resp in total_pushes:
         # Lets also track what hour the push happened in
-        bhour = datetime.datetime.fromtimestamp(int(total_pushes[resp]['date'])).hour
+        bhour = datetime.datetime.fromtimestamp(int(total_pushes[resp]['date'])).weekday()
         pushes_hours[bhour] = pushes_hours[bhour] + 1
         for chnge in range(len(total_pushes[resp]['changesets'])):
             if (backoutln.match(total_pushes[resp]['changesets'][chnge]['desc']) or
@@ -76,7 +76,7 @@ def backouts(tree, search_date):
                 backed += 1
 
                 # Lets also track what hour the backouts happened in
-                bhour = datetime.datetime.fromtimestamp(int(total_pushes[resp]['date'])).hour
+                bhour = datetime.datetime.fromtimestamp(int(total_pushes[resp]['date'])).weekday()
                 backout_hours[bhour] = backout_hours[bhour] + 1
                 pushes_hours[bhour] = pushes_hours[bhour] - 1
                 break
