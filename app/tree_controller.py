@@ -50,15 +50,8 @@ def backouts(tree, search_date):
         ("integration/%s" % tree if tree != "mozilla-central" else tree, search_date), verify=True).json()
     backed = 0
     backoutln = re.compile('^.*[b,B]acked out.*')
-    merges = re.compile('^.*[M,m]erge .* to .*')
-    keys_to_pop = []
-    for resp in total_pushes:
-        for chnge in range(len(total_pushes[resp]['changesets'])):
-            if merges.match(total_pushes[resp]['changesets'][chnge]['desc']):
-                keys_to_pop.append(resp)
 
-    for key in keys_to_pop:
-        total_pushes.pop(key, None)
+    total_pushes = _remove_merges(total_pushes)
 
     backout_hours = [0] * 7
     pushes_hours = [0] * 7
@@ -83,6 +76,19 @@ def backouts(tree, search_date):
             "pushes": total_pushes,
             "backoutHours": backout_hours,
             "pushesHours": pushes_hours}
+
+def _remove_merges(total_pushes):
+    merges = re.compile('^.*[M,m]erge .* to .*')
+    keys_to_pop = []
+    for resp in total_pushes:
+        for chnge in range(len(total_pushes[resp]['changesets'])):
+            if merges.match(total_pushes[resp]['changesets'][chnge]['desc']):
+                keys_to_pop.append(resp)
+
+    for key in keys_to_pop:
+        total_pushes.pop(key, None)
+
+    return total_pushes
 
 def calculate_closures(tree):
     response = requests.get('https://api.pub.build.mozilla.org/treestatus/trees/%s/logs?all=1' % tree, verify=False)
