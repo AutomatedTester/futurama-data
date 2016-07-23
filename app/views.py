@@ -54,9 +54,7 @@ def renderbackouts(tree, week):
 
     backed = 0
     today_pushes = 0
-    backoutln = re.compile('^.*[b,B]ackout.*')
-    backoutln2 = re.compile('^.*[b,B]acked out.*')
-    backoutln3 = re.compile('^.*[b,B]ack out.*')
+    backoutln = re.compile('^.*[b,B]acked out.*')
     backout_hours = [0] * 24
     pushes_hours = [0] * 24
 
@@ -67,9 +65,7 @@ def renderbackouts(tree, week):
                 bhour = datetime.datetime.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])).hour
                 pushes_hours[bhour] = pushes_hours[bhour] + 1
                 for chnge in range(len(backouts_since_week['pushes'][resp]['changesets'])):
-                    if (backoutln.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc']) or
-                        backoutln2.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc']) or
-                        backoutln3.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc'])):
+                    if (backoutln.match(backouts_since_week['pushes'][resp]['changesets'][chnge]['desc'])):
 
                         if (datetime.date.fromtimestamp(int(backouts_since_week['pushes'][resp]['date'])) == datetime.date.today()):
                             backed += 1

@@ -49,9 +49,7 @@ def backouts(tree, search_date):
     total_pushes = requests.get("https://hg.mozilla.org/%s/json-pushes?full=1&startdate=%s" %
         ("integration/%s" % tree if tree != "mozilla-central" else tree, search_date), verify=True).json()
     backed = 0
-    backoutln = re.compile('^.*[b,B]ackout.*')
-    backoutln2 = re.compile('^.*[b,B]acked out.*')
-    backoutln3 = re.compile('^.*[b,B]ack out.*')
+    backoutln = re.compile('^.*[b,B]acked out.*')
     merges = re.compile('^.*[M,m]erge .* to .*')
     keys_to_pop = []
     for resp in total_pushes:
@@ -70,9 +68,7 @@ def backouts(tree, search_date):
         bhour = datetime.datetime.fromtimestamp(int(total_pushes[resp]['date'])).weekday()
         pushes_hours[bhour] = pushes_hours[bhour] + 1
         for chnge in range(len(total_pushes[resp]['changesets'])):
-            if (backoutln.match(total_pushes[resp]['changesets'][chnge]['desc']) or
-                backoutln2.match(total_pushes[resp]['changesets'][chnge]['desc']) or
-                backoutln3.match(total_pushes[resp]['changesets'][chnge]['desc'])):
+            if (backoutln.match(total_pushes[resp]['changesets'][chnge]['desc'])):
                 backed += 1
 
                 # Lets also track what hour the backouts happened in
