@@ -91,7 +91,7 @@ def _remove_merges(total_pushes):
     return total_pushes
 
 def calculate_closures(tree):
-    response = requests.get('https://api.pub.build.mozilla.org/treestatus/trees/%s/logs?all=1' % tree, verify=False)
+    response = requests.get('https://treestatus.mozilla-releng.net/trees/%s/logs?all=1' % tree, verify=False)
     results = response.json()
     delta = datetime.timedelta(0)
     closed = None
