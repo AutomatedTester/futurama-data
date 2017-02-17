@@ -23,6 +23,6 @@ class TestEndpoints(object):
         rv = self.app.get('/?tree=mozilla-central')
         assert "Futurama" in rv.data
 
-    def test_fx_team(self):
-        rv = self.app.get('/?tree=fx-team')
+    def test_autoland(self):
+        rv = self.app.get('/?tree=autoland')
         assert "Futurama" in rv.data
